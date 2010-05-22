@@ -23,8 +23,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    textEdit = new QTextEdit;
-    setCentralWidget(textEdit);
+    textEdit = new QPlainTextEdit;
+    setCentralWidget(textEdit); 
 
     m_savedFileName = "";
     m_isFileNameKnown = false;
@@ -71,7 +71,6 @@ void MainWindow::createActions()
     saveAsAction->setIcon(QIcon::fromTheme("document-save-as", QIcon(":/images/document-save-as.png")));
     saveAsAction->setShortcut(QKeySequence::SaveAs);
     saveAsAction->setStatusTip(tr("Save as a document"));
-    connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
 
     undoAction = new QAction(tr("&Undo"), this);
     undoAction->setEnabled(false);
@@ -89,11 +88,11 @@ void MainWindow::createActions()
     connect(textEdit, SIGNAL(redoAvailable(bool)), redoAction, SLOT(setEnabled(bool)));
     connect(redoAction, SIGNAL(triggered()), textEdit, SLOT(redo()));
 
-    clearAction = new QAction(tr("&Clear"), this);
-    clearAction->setIcon(QIcon::fromTheme("edit-clear", QIcon(":/images/edit-delete.png")));
-    clearAction->setShortcut(QKeySequence::Delete);
-    clearAction->setStatusTip(tr("Delete a part of a text"));
-    connect(clearAction, SIGNAL(triggered()), textEdit, SLOT(clear()));
+    clearAllAction = new QAction(tr("&Clear All"), this);
+    clearAllAction->setIcon(QIcon::fromTheme("edit-clear", QIcon(":/images/edit-delete.png")));
+    clearAllAction->setShortcut(QKeySequence::Delete);
+    clearAllAction->setStatusTip(tr("Delete a part of a text"));
+    connect(clearAllAction, SIGNAL(triggered()), textEdit, SLOT(clear()));
 
     copyAction = new QAction(tr("Copy"), this);
     copyAction->setEnabled(false);
@@ -136,7 +135,7 @@ void MainWindow::createActions()
 }
 
 /* createContextMenus: Create some editing menus for the central
- * widget.In this case this is a QTextEdit.
+ * widget.In this case this is a QPlainTextEdit.
  * It will be appeare when the user clicks to it with the left
  * mouse button.
 */
@@ -162,7 +161,7 @@ void MainWindow::createToolBars()
     editToolBar = addToolBar(tr("&Edit"));
     editToolBar->addAction(undoAction);
     editToolBar->addSeparator();
-    editToolBar->addAction(clearAction);
+    editToolBar->addAction(clearAllAction);
     editToolBar->addAction(copyAction);
     editToolBar->addAction(cutAction);
     editToolBar->addAction(cutAction);
@@ -186,7 +185,7 @@ void MainWindow::createMenus()
     editMenu->addAction(undoAction);
     editMenu->addAction(redoAction);
     editMenu->addSeparator();
-    editMenu->addAction(clearAction);
+    editMenu->addAction(clearAllAction);
     editMenu->addAction(copyAction);
     editMenu->addAction(cutAction);
     editMenu->addAction(pasteAction);
@@ -202,7 +201,7 @@ void MainWindow::createMenus()
 */
 void MainWindow::createStatusBar()
 {
-    QLabel *statusLabel = new QLabel("Ready....");
+    QLabel *statusLabel = new QLabel(tr("Ready...."));
     statusBar()->addWidget(statusLabel);
     statusLabel->setAlignment(Qt::AlignLeft);
 }
@@ -244,7 +243,7 @@ void MainWindow::setCurrentFile(const QString &fileName)
     if (fileName.isEmpty())
         currentFile = tr("Untitled");
     else
-        currentFile = fileName;
+        currentFile = QFileInfo(fileName).fileName();
 
    setWindowModified(false);
 
@@ -273,7 +272,7 @@ void MainWindow::open()
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this
                                         ,tr("Open text files"), "."
-                                        ,tr("Every file (*.*)"));
+                                        ,tr("Every file (*)\nText files (*.txt)"));
     if (!fileName.isEmpty())
         loadFile(fileName);
         m_savedFileName = fileName;
@@ -301,13 +300,18 @@ bool MainWindow::saveFile()
     if (!m_isFileNameKnown) {
         fileName = QFileDialog::getSaveFileName(this
                                                 ,tr("Save text files"), "."
-                                                ,tr("Every file (*.*)"));
+                                                ,tr("Every file (*)\nText files (*.txt)"));
         m_savedFileName = fileName;
     }
-    if (!m_savedFileName.isEmpty())
-        writeFile(m_savedFileName);
-    else
+    if (!m_savedFileName.isEmpty()) {
+        if (!QFileInfo(m_savedFileName).isWritable()) {
+            QMessageBox::warning(this, "Ned - Error", "The file is not writable");
+            return false;
+        } else
+            writeFile(m_savedFileName);
+    } else
         return false;
+
     m_isFileNameKnown = true;
     setCurrentFile(m_savedFileName);
     return true;
@@ -317,7 +321,7 @@ void MainWindow::saveAs()
 {
     QString fileName = QFileDialog::getSaveFileName(this
                                     ,tr("Save as text file"), "."
-                                    ,tr("Every file (*.*)"));
+                                    ,tr("Every file (*)\nText files (*.txt)"));
 
     if (!fileName.isEmpty())
         writeFile(fileName);
@@ -334,7 +338,7 @@ void MainWindow::about()
 {
     QMessageBox::about(this
                        ,tr("About Ned")
-                       ,tr("<b><h3>Ned, version: %1.%2</h3></b>"
+                       ,tr("<b><h3>Ned, version %1.%2</h3></b>"
                            "Ned is a simple, cross-platform text editor "
                            "written in C++, using the Qt4 graphical "
                            "framework.<br><br>"
@@ -349,12 +353,12 @@ bool MainWindow::readFile(QString &fileName)
     if (!file.open(QIODevice::ReadOnly)) {
         QMessageBox::critical(this
                               ,tr("Critical Error - Ned")
-                              ,tr("An error occured when trying to read"
+                              ,tr("An error occured when trying to read "
                                   "%1 file from the disk").arg(fileName));
         return false;
     }
     QTextStream in(&file);
-    textEdit->setText(in.readAll());
+    textEdit->setPlainText(in.readAll());
     return true;
 }
 
@@ -385,6 +389,9 @@ void MainWindow::textEditModified()
 void MainWindow::setArgument(char *file)
 {
     QString fileName(file);
-    if (!fileName.isEmpty())
+    if (!fileName.isEmpty()) {
+        m_isFileNameKnown = true;
+        m_savedFileName = fileName;
         loadFile(fileName);
+    }
 }

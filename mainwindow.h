@@ -25,7 +25,7 @@
 
 class QAction;
 class QMenu;
-class QTextEdit;
+class QPlainTextEdit;
 class QToolBar;
 class QMainWindow;
 
@@ -67,14 +67,14 @@ private slots:
     bool readFile(QString &fileName);
     bool writeFile(QString &fileName);
 
-    QTextEdit *textEdit;
+    QPlainTextEdit *textEdit;
     QAction *newAction;
     QAction *saveAction;
     QAction *saveAsAction;
     QAction *openAction;
     QAction *undoAction;
     QAction *redoAction;
-    QAction *clearAction;
+    QAction *clearAllAction;
     QAction *copyAction;
     QAction *cutAction;
     QAction *pasteAction;
