@@ -24,7 +24,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     textEdit = new QPlainTextEdit;
+    textEdit->setAcceptDrops(false);
     setCentralWidget(textEdit); 
+
+    // We enable drop on the whole window
+    setAcceptDrops(true);
 
     m_savedFileName = "";
     m_isFileNameKnown = false;
@@ -236,6 +240,26 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("text/uri-list"))
+        event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    QList<QUrl> urls = event->mimeData()->urls();
+    if (urls.isEmpty())
+        return;
+    QString fileName = urls.first().toLocalFile();
+
+    if (fileName.isEmpty())
+        return;
+
+    if (readFile(fileName))
+        setCurrentFile(fileName);
+}
+
 void MainWindow::setCurrentFile(const QString &fileName)
 {
     QString currentFile;
@@ -272,7 +296,7 @@ void MainWindow::open()
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this
                                         ,tr("Open text files"), "."
-                                        ,tr("Every file (*)\nText files (*.txt)"));
+                                        ,tr("Every file (*.*)\nText files (*.txt)"));
     if (!fileName.isEmpty())
         loadFile(fileName);
         m_savedFileName = fileName;
@@ -300,7 +324,7 @@ bool MainWindow::saveFile()
     if (!m_isFileNameKnown) {
         fileName = QFileDialog::getSaveFileName(this
                                                 ,tr("Save text files"), "."
-                                                ,tr("Every file (*)\nText files (*.txt)"));
+                                                ,tr("Every file (*.*)\nText files (*.txt)"));
         m_savedFileName = fileName;
     }
     if (!m_savedFileName.isEmpty()) {
@@ -321,7 +345,7 @@ void MainWindow::saveAs()
 {
     QString fileName = QFileDialog::getSaveFileName(this
                                     ,tr("Save as text file"), "."
-                                    ,tr("Every file (*)\nText files (*.txt)"));
+                                    ,tr("Every file (*.*)\nText files (*.txt)"));
 
     if (!fileName.isEmpty())
         writeFile(fileName);

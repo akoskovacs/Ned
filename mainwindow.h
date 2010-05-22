@@ -46,7 +46,10 @@ private slots:
     void about();
     void textEditModified();
 
+protected:
     void closeEvent(QCloseEvent *);
+    void dragEnterEvent(QDragEnterEvent *);
+    void dropEvent(QDropEvent *);
 
  private:
     void createActions();
