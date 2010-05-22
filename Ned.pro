@@ -10,9 +10,11 @@ TARGET = Ned
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        MainWindow.cpp \
+    FindDialog.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += MainWindow.h \
+    FindDialog.h
 
 TRANSLATIONS += ned_hu.ts
 

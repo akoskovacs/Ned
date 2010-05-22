@@ -18,7 +18,8 @@
  *
  **************************************************************************/    
 
-#include "mainwindow.h"
+#include "MainWindow.h"
+#include "FindDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -92,13 +93,19 @@ void MainWindow::createActions()
     connect(textEdit, SIGNAL(redoAvailable(bool)), redoAction, SLOT(setEnabled(bool)));
     connect(redoAction, SIGNAL(triggered()), textEdit, SLOT(redo()));
 
-    clearAllAction = new QAction(tr("&Clear All"), this);
+    findAction = new QAction(tr("&Find"), this);
+    findAction->setIcon(QIcon::fromTheme("edit-find"));
+    findAction->setShortcut(QKeySequence::Find);
+    findAction->setStatusTip(tr("Find a text"));
+    connect(findAction, SIGNAL(triggered()), this, SLOT(find()));
+
+    clearAllAction = new QAction(tr("Cl&ear All"), this);
     clearAllAction->setIcon(QIcon::fromTheme("edit-clear", QIcon(":/images/edit-delete.png")));
     clearAllAction->setShortcut(QKeySequence::Delete);
     clearAllAction->setStatusTip(tr("Delete a part of a text"));
     connect(clearAllAction, SIGNAL(triggered()), textEdit, SLOT(clear()));
 
-    copyAction = new QAction(tr("Copy"), this);
+    copyAction = new QAction(tr("&Copy"), this);
     copyAction->setEnabled(false);
     copyAction->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/images/edit-copy.png")));
     copyAction->setShortcut(QKeySequence::Copy);
@@ -106,7 +113,7 @@ void MainWindow::createActions()
     connect(textEdit, SIGNAL(copyAvailable(bool)),copyAction, SLOT(setEnabled(bool)));
     connect(copyAction, SIGNAL(triggered()), textEdit, SLOT(copy()));
 
-    cutAction = new QAction(tr("&Cut"), this);
+    cutAction = new QAction(tr("C&ut"), this);
     cutAction->setEnabled(false);
     cutAction->setIcon(QIcon::fromTheme("edit-cut", QIcon(":/images/edit-cut.png")));
     cutAction->setShortcut(QKeySequence::Cut);
@@ -188,6 +195,8 @@ void MainWindow::createMenus()
     editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(undoAction);
     editMenu->addAction(redoAction);
+    editMenu->addSeparator();
+    editMenu->addAction(findAction);
     editMenu->addSeparator();
     editMenu->addAction(clearAllAction);
     editMenu->addAction(copyAction);
@@ -358,6 +367,20 @@ void MainWindow::newFile()
     mainWin->show();
 }
 
+void MainWindow::find()
+{
+    if (!findDialog) {
+        findDialog = new FindDialog(this);
+        connect(findDialog, SIGNAL(find(QString, Qt::CaseSensitivity))
+                ,this ,SLOT(findText(QString, Qt::CaseSensitivity)));
+    }
+
+    //findDialog->exec();
+    findDialog->show();
+    findDialog->raise();
+    findDialog->activateWindow();
+}
+
 void MainWindow::about()
 {
     QMessageBox::about(this
@@ -418,4 +441,9 @@ void MainWindow::setArgument(char *file)
         m_savedFileName = fileName;
         loadFile(fileName);
     }
+}
+
+void MainWindow::findText(QString &str, Qt::CaseSensitivity cs)
+{
+    textEdit->find(str);
 }

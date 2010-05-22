@@ -28,6 +28,7 @@ class QMenu;
 class QPlainTextEdit;
 class QToolBar;
 class QMainWindow;
+class FindDialog;
 
 class MainWindow : public QMainWindow
 {
@@ -43,8 +44,10 @@ private slots:
     void open();
     bool saveFile();
     void saveAs();
+    void find();
     void about();
     void textEditModified();
+    void findText(QString &, Qt::CaseSensitivity cs);
 
 protected:
     void closeEvent(QCloseEvent *);
@@ -77,6 +80,7 @@ protected:
     QAction *openAction;
     QAction *undoAction;
     QAction *redoAction;
+    QAction *findAction;
     QAction *clearAllAction;
     QAction *copyAction;
     QAction *cutAction;
@@ -91,6 +95,8 @@ protected:
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *aboutMenu;
+
+    FindDialog *findDialog;
 
     QString m_savedFileName;
     bool m_isFileNameKnown;
