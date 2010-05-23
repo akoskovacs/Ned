@@ -45,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     readSettings();
     setWindowIcon(QIcon(":/images/text-editor.png"));
-
 }
 
 /*
@@ -93,7 +92,7 @@ void MainWindow::createActions()
     connect(textEdit, SIGNAL(redoAvailable(bool)), redoAction, SLOT(setEnabled(bool)));
     connect(redoAction, SIGNAL(triggered()), textEdit, SLOT(redo()));
 
-    findAction = new QAction(tr("&Find"), this);
+    findAction = new QAction(tr("&Find..."), this);
     findAction->setIcon(QIcon::fromTheme("edit-find"));
     findAction->setShortcut(QKeySequence::Find);
     findAction->setStatusTip(tr("Find a text"));
