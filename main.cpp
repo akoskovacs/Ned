@@ -18,8 +18,8 @@
  *
  **************************************************************************/    
 
-#include <QtGui/QApplication>
-#include "mainwindow.h"
+#include <QApplication>
+#include "MainWindow.h"
 #include <QTranslator>
 
 int main(int argc, char *argv[])

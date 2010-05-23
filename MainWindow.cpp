@@ -18,7 +18,7 @@
  *
  **************************************************************************/    
 
-#include "mainwindow.h"
+#include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -334,13 +334,12 @@ void MainWindow::about()
 {
     QMessageBox::about(this
                        ,tr("About Ned")
-                       ,tr("<b><h3>Ned, version: %1.%2</h3></b>"
+                       ,tr("<b><h3>Ned, version: %1</h3></b>"
                            "Ned is a simple, cross-platform text editor "
                            "written in C++, using the Qt4 graphical "
                            "framework.<br><br>"
                            "<i>Copyright (C) Akos Kovacs - 2010</i>")
-                           .arg(MajorVer)
-                           .arg(MinorVer));
+                           .arg(APP_VERSION));
 }
 
 bool MainWindow::readFile(QString &fileName)
