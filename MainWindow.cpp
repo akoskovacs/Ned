@@ -19,7 +19,7 @@
  **************************************************************************/    
 
 #include "MainWindow.h"
-#include "FindDialog.h"
+//#include "FindDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -370,8 +370,8 @@ void MainWindow::find()
 {
     if (!findDialog) {
         findDialog = new FindDialog(this);
-        connect(findDialog, SIGNAL(find(QString, Qt::CaseSensitivity))
-                ,this ,SLOT(findText(QString, Qt::CaseSensitivity)));
+        connect(findDialog, SIGNAL(find(QString, FindFlag))
+                ,this ,SLOT(findText(QString, FindFlag)));
     }
 
     //findDialog->exec();
@@ -442,7 +442,7 @@ void MainWindow::setArgument(char *file)
     }
 }
 
-void MainWindow::findText(QString &str, Qt::CaseSensitivity cs)
+void MainWindow::findText(QString &str, Ned::FindFlag ff)
 {
-    textEdit->find(str);
+    textEdit->find(str, ff);
 }

@@ -85,11 +85,11 @@ void FindDialog::findButtonClicked()
 {
     QString text = findEdit->text();
 
-    Qt::CaseSensitivity cs =
-            sensitivityBox->isChecked() ? Qt::CaseSensitive
-                :Qt::CaseInsensitive;
+            FindFlag cf;
+            if (sensitivityBox->isChecked())
+                cf = FindFlag::FindCaseSensitively;
 
-    emit find(text, cs);
+    emit find(text, cf);
 }
 
 void FindDialog::enableFindButton(QString &string)

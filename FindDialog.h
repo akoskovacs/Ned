@@ -21,6 +21,14 @@
 #ifndef FINDDIALOG_H
 #define FINDDIALOG_H
 
+namespace Ned {
+    enum FindFlag {
+        FindBackward = 0x00001,
+        FindCaseSensitively = 0x00002,
+        FindWholeWords = 0x00004
+    }
+}
+
 #include <QDialog>
 
 class QPushButton;
@@ -39,7 +47,7 @@ public:
     FindDialog(QWidget *parent=0);
 
 signals:
-    void find(QString &exp, Qt::CaseSensitivity cs);
+    void find(QString &exp, Ned::FindFlag ff);
 
 private slots:
     void findButtonClicked();

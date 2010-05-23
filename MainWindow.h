@@ -22,6 +22,7 @@
 #define MAINWINDOW_H
 
 #include <QtGui>
+#include "FindDialog.h"
 
 class QAction;
 class QMenu;
@@ -47,7 +48,7 @@ private slots:
     void find();
     void about();
     void textEditModified();
-    void findText(QString &, Qt::CaseSensitivity cs);
+    void findText(QString &, Ned::FindFlag);
 
 protected:
     void closeEvent(QCloseEvent *);
