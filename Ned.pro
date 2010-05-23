@@ -10,9 +10,9 @@ TARGET = Ned
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        MainWindow.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += MainWindow.h
 
 TRANSLATIONS += ned_hu.ts
 
