@@ -21,6 +21,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#define APP_VERSION "0.2.1"
+
 #include <QtGui>
 
 class QAction;
@@ -35,7 +37,6 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = 0);
-    enum AppVersion { MajorVer = 0, MinorVer = 2 };
     void setArgument(char *);
 
 private slots:
