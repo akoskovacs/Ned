@@ -54,31 +54,36 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::createActions()
 {
     newAction = new QAction(tr("&New"), this);
-    newAction->setIcon(QIcon::fromTheme("document-new", QIcon(":/images/document-new.png")));
+    newAction->setIcon(QIcon::fromTheme("document-new"
+                                        ,QIcon(":/images/document-new.png")));
     newAction->setShortcut(QKeySequence::New);
     newAction->setStatusTip(tr("Create new document"));
     connect(newAction, SIGNAL(triggered()), this, SLOT(newFile()));
 
     openAction = new QAction(tr("&Open"), this);
-    openAction->setIcon(QIcon::fromTheme("document-open", QIcon(":/images/document-open.png")));
+    openAction->setIcon(QIcon::fromTheme("document-open"
+                                         ,QIcon(":/images/document-open.png")));
     openAction->setShortcut(QKeySequence::Open);
     openAction->setStatusTip(tr("Open an exsisiting document"));
     connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
 
     saveAction = new QAction(tr("&Save"), this);
-    saveAction->setIcon(QIcon::fromTheme("document-save", QIcon(":/images/document-save.png")));
+    saveAction->setIcon(QIcon::fromTheme("document-save"
+                                         ,QIcon(":/images/document-save.png")));
     saveAction->setShortcut(QKeySequence::Save);
     saveAction->setStatusTip(tr("Save the edited document"));
     connect(saveAction, SIGNAL(triggered()), this, SLOT(saveFile()));
 
     saveAsAction = new QAction(tr("&Save As"), this);
-    saveAsAction->setIcon(QIcon::fromTheme("document-save-as", QIcon(":/images/document-save-as.png")));
+    saveAsAction->setIcon(QIcon::fromTheme("document-save-as"
+                                          ,QIcon(":/images/document-save-as.png")));
     saveAsAction->setShortcut(QKeySequence::SaveAs);
     saveAsAction->setStatusTip(tr("Save as a document"));
 
     undoAction = new QAction(tr("&Undo"), this);
     undoAction->setEnabled(false);
-    undoAction->setIcon(QIcon::fromTheme("edit-undo", QIcon(":/images/edit-undo.png")));
+    undoAction->setIcon(QIcon::fromTheme("edit-undo"
+                                         ,QIcon(":/images/edit-undo.png")));
     undoAction->setShortcut(QKeySequence::Undo);
     undoAction->setStatusTip(tr("Undo a change in the editor area"));
     connect(undoAction, SIGNAL(triggered()), textEdit, SLOT(undo()));
@@ -86,7 +91,8 @@ void MainWindow::createActions()
 
     redoAction = new QAction(tr("&Redo"), this);
     redoAction->setEnabled(false);
-    redoAction->setIcon(QIcon::fromTheme("edit-redo", QIcon(":/images/edit-redo.png")));
+    redoAction->setIcon(QIcon::fromTheme("edit-redo"
+                                         ,QIcon(":/images/edit-redo.png")));
     redoAction->setShortcut(QKeySequence::Redo);
     redoAction->setStatusTip(tr("Redo a change in the editor area"));
     connect(textEdit, SIGNAL(redoAvailable(bool)), redoAction, SLOT(setEnabled(bool)));
@@ -99,14 +105,16 @@ void MainWindow::createActions()
     connect(findAction, SIGNAL(triggered()), this, SLOT(find()));
 
     clearAllAction = new QAction(tr("Cl&ear All"), this);
-    clearAllAction->setIcon(QIcon::fromTheme("edit-clear", QIcon(":/images/edit-delete.png")));
+    clearAllAction->setIcon(QIcon::fromTheme("edit-clear"
+                                             ,QIcon(":/images/edit-delete.png")));
     clearAllAction->setShortcut(QKeySequence::Delete);
     clearAllAction->setStatusTip(tr("Delete a part of a text"));
     connect(clearAllAction, SIGNAL(triggered()), textEdit, SLOT(clear()));
 
     copyAction = new QAction(tr("&Copy"), this);
     copyAction->setEnabled(false);
-    copyAction->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/images/edit-copy.png")));
+    copyAction->setIcon(QIcon::fromTheme("edit-copy"
+                                         ,QIcon(":/images/edit-copy.png")));
     copyAction->setShortcut(QKeySequence::Copy);
     copyAction->setStatusTip(tr("Copy a text part"));
     connect(textEdit, SIGNAL(copyAvailable(bool)),copyAction, SLOT(setEnabled(bool)));
@@ -114,20 +122,23 @@ void MainWindow::createActions()
 
     cutAction = new QAction(tr("C&ut"), this);
     cutAction->setEnabled(false);
-    cutAction->setIcon(QIcon::fromTheme("edit-cut", QIcon(":/images/edit-cut.png")));
+    cutAction->setIcon(QIcon::fromTheme("edit-cut"
+                                        ,QIcon(":/images/edit-cut.png")));
     cutAction->setShortcut(QKeySequence::Cut);
     cutAction->setStatusTip(tr("Cut a text part"));
     connect(textEdit, SIGNAL(copyAvailable(bool)), cutAction, SLOT(setEnabled(bool)));
     connect(cutAction, SIGNAL(triggered()), textEdit, SLOT(cut()));
 
     pasteAction = new QAction(tr("&Paste"), this);
-    pasteAction->setIcon(QIcon::fromTheme("edit-paste", QIcon(":/images/edit-paste.png")));
+    pasteAction->setIcon(QIcon::fromTheme("edit-paste"
+                                          ,QIcon(":/images/edit-paste.png")));
     pasteAction->setShortcut(QKeySequence::Paste);
     pasteAction->setStatusTip(tr("Paste the cutted text"));
     connect(pasteAction, SIGNAL(triggered()), textEdit, SLOT(paste()));
 
     selectAllAction = new QAction(tr("&Select All"), this);
-    selectAllAction->setIcon(QIcon::fromTheme("edit-select-all", QIcon(":/images/edit-select-all.png")));
+    selectAllAction->setIcon(QIcon::fromTheme("edit-select-all"
+                                              ,QIcon(":/images/edit-select-all.png")));
     selectAllAction->setShortcut(QKeySequence::SelectAll);
     selectAllAction->setStatusTip(tr("Select all text in the text editor"));
     connect(selectAllAction, SIGNAL(triggered()), textEdit, SLOT(selectAll()));
@@ -138,7 +149,8 @@ void MainWindow::createActions()
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 
     exitAction = new QAction(tr("Exit"), this);
-    exitAction->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/window-close.png")));
+    exitAction->setIcon(QIcon::fromTheme("application-exit"
+                                         ,QIcon(":/images/window-close.png")));
     exitAction->setShortcut(tr("Ctrl+Q"));
     exitAction->setStatusTip(tr("Exit from the application"));
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
@@ -324,7 +336,6 @@ bool MainWindow::loadFile(QString &fileName)
     return true;
 }
 
-// Need to be implemented
 bool MainWindow::saveFile()
 {
     QString fileName;
@@ -441,8 +452,9 @@ void MainWindow::setArgument(char *file)
         loadFile(fileName);
     }
 }
-
+/*
 void MainWindow::findText(QString &str, Ned::FindFlag ff)
 {
     textEdit->find(str, ff);
 }
+*/

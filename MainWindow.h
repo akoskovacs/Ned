@@ -48,7 +48,7 @@ private slots:
     void find();
     void about();
     void textEditModified();
-    void findText(QString &, Ned::FindFlag);
+    //void findText(QString &, FindDialog::FindFlag);
 
 protected:
     void closeEvent(QCloseEvent *);

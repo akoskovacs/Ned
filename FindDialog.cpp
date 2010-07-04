@@ -80,7 +80,7 @@ void FindDialog::setupLayouts()
     mainLayout->addLayout(rightLayout);
     setLayout(mainLayout);
 }
-
+/*
 void FindDialog::findButtonClicked()
 {
     QString text = findEdit->text();
@@ -96,3 +96,4 @@ void FindDialog::enableFindButton(QString &string)
 {
     findButton->setEnabled(!string.isEmpty());
 }
+*/
