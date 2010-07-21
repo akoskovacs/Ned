@@ -9,14 +9,14 @@ QT       += core gui
 TARGET = Ned
 TEMPLATE = app
 
-SOURCES += main.cpp\
-        MainWindow.cpp \
-    FindDialog.cpp
+SOURCES += ./src/main.cpp\
+        ./src/MainWindow.cpp \
+    ./src/FindDialog.cpp
 
-HEADERS  += MainWindow.h \
-    FindDialog.h
+HEADERS  += ./src/MainWindow.h \
+    ./src/FindDialog.h
 
-TRANSLATIONS += ned_hu.ts
+TRANSLATIONS += ./translations/ned_hu.ts
 
 RESOURCES += \
     ned.qrc
