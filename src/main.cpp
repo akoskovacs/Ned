@@ -1,7 +1,7 @@
 /*************************************************************************    
  *
  *   Ned - Simple, graphical, cross-platform editor
- *   Copyright (C) 2010 Ákos Kovács 
+ *   Copyright (C) 2010 Ákos Kovács <akoskovacs@gmx.com> 
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by

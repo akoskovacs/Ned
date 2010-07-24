@@ -3,3 +3,5 @@ ned
 Ned.pro.user
 main.cpp.orig
 *~
+moc_*
+*.o
