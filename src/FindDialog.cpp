@@ -29,13 +29,14 @@
 #include <QCheckBox>
 
 FindDialog::FindDialog(QWidget *parent)
-    :QDialog(parent)
+    : QDialog(parent)
 {
-    setupLayouts();
     createWidgets();
+    setupLayouts();
 
     findButton->setEnabled(false);
     whatLabel->setBuddy(findEdit);
+    findWordsBox->setChecked(true);
 
     connect(findEdit, SIGNAL(textChanged(QString)),
             this, SLOT(enableFindButton(QString)));
@@ -57,6 +58,8 @@ void FindDialog::createWidgets()
     findEdit = new QLineEdit;
     whatLabel = new QLabel(tr("Find &what"));
     sensitivityBox = new QCheckBox(tr("Case &sesitive"));
+    searchBackwardBox = new QCheckBox(tr("Search &Backward"));
+    findWordsBox = new QCheckBox(tr("Find w&hole words"));
     topLeftLayout = new QHBoxLayout;
     mainLayout = new QHBoxLayout;
     rightLayout = new QVBoxLayout;
@@ -71,6 +74,8 @@ void FindDialog::setupLayouts()
     leftLayout->addLayout(topLeftLayout);
     leftLayout->addStretch();
     leftLayout->addWidget(sensitivityBox);
+    leftLayout->addWidget(searchBackwardBox);
+    leftLayout->addWidget(findWordsBox);
 
     rightLayout->addWidget(findButton);
     rightLayout->addStretch();
@@ -80,20 +85,25 @@ void FindDialog::setupLayouts()
     mainLayout->addLayout(rightLayout);
     setLayout(mainLayout);
 }
-/*
+
 void FindDialog::findButtonClicked()
 {
-    QString text = findEdit->text();
+    QString searchString = findEdit->text();
 
-            FindFlag cf;
-            if (sensitivityBox->isChecked())
-                cf = FindFlag::FindCaseSensitively;
+    QTextDocument::FindFlags ff;
+       if (sensitivityBox->isChecked())
+            ff |= QTextDocument::FindCaseSensitively;
 
-    emit find(text, cf);
+       if (searchBackwardBox->isChecked())
+           ff |= QTextDocument::FindBackward;
+
+       if (findWordsBox->isChecked())
+           ff |= QTextDocument::FindWholeWords;
+
+    emit find(searchString, ff);
 }
 
 void FindDialog::enableFindButton(QString &string)
 {
     findButton->setEnabled(!string.isEmpty());
 }
-*/

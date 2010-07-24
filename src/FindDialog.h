@@ -22,6 +22,7 @@
 #define FINDDIALOG_H
 
 #include <QDialog>
+#include <QTextDocument>
 
 class QPushButton;
 class QVBoxLayout;
@@ -37,14 +38,9 @@ class FindDialog : public QDialog
 
 public:
     FindDialog(QWidget *parent=0);
-    /*enum FindFlag {
-        FindBackward = 0x00001,
-        FindCaseSensitively = 0x00002,
-        FindWholeWords = 0x00004
-    }
 
 signals:
-    void find(QString &exp, FindFlag ff);*/
+    void find(QString &exp, QTextDocument::FindFlags);
 
 private slots:
     void findButtonClicked();
@@ -59,6 +55,8 @@ private:
     QLineEdit *findEdit;
     QLabel *whatLabel;
     QCheckBox *sensitivityBox;
+    QCheckBox *searchBackwardBox;
+    QCheckBox *findWordsBox;
     QHBoxLayout *topLeftLayout;
     QHBoxLayout *mainLayout;
     QVBoxLayout *rightLayout;

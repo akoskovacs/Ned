@@ -12,7 +12,7 @@
         <file>images/edit-select-all.png</file>
         <file>images/edit-undo.png</file>
         <file>images/window-close.png</file>
-        <file>ned_hu.qm</file>
+        <file>translations/ned_hu.qm</file>
         <file>images/text-editor.png</file>
     </qresource>
 </RCC>

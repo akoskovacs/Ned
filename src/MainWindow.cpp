@@ -102,7 +102,7 @@ void MainWindow::createActions()
     findAction->setIcon(QIcon::fromTheme("edit-find"));
     findAction->setShortcut(QKeySequence::Find);
     findAction->setStatusTip(tr("Find a text"));
-    connect(findAction, SIGNAL(triggered()), this, SLOT(find()));
+    connect(findAction, SIGNAL(triggered()), this, SLOT(createFindDialog()));
 
     clearAllAction = new QAction(tr("Cl&ear All"), this);
     clearAllAction->setIcon(QIcon::fromTheme("edit-clear"
@@ -377,13 +377,13 @@ void MainWindow::newFile()
     mainWin->show();
 }
 
-void MainWindow::find()
+void MainWindow::createFindDialog()
 {
-    if (!findDialog) {
+  if (!findDialog) {
         findDialog = new FindDialog(this);
         connect(findDialog, SIGNAL(find(QString, FindFlag))
                 ,this ,SLOT(findText(QString, FindFlag)));
-    }
+   }
 
     //findDialog->exec();
     findDialog->show();
@@ -452,9 +452,9 @@ void MainWindow::setArgument(char *file)
         loadFile(fileName);
     }
 }
-/*
-void MainWindow::findText(QString &str, Ned::FindFlag ff)
+
+void MainWindow::findText(QString &str, QTextDocument::FindFlag ff)
 {
     textEdit->find(str, ff);
 }
-*/
+

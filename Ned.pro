@@ -19,4 +19,4 @@ HEADERS  += ./src/MainWindow.h \
 TRANSLATIONS += ./translations/ned_hu.ts
 
 RESOURCES += \
-    ned.qrc
+    Ned.qrc

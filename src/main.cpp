@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QTranslator appTranslator;
-    appTranslator.load("ned_" + QLocale::system().name(), ":/");
+    appTranslator.load("ned_" + QLocale::system().name(), ":/translations");
     app.installTranslator(&appTranslator);
 
     MainWindow *window = new MainWindow();
