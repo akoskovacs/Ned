@@ -1,7 +1,7 @@
 /*************************************************************************    
  *
  *   Ned - Simple, graphical, cross-platform editor
- *   Copyright (C) 2010 Ákos Kovács 
+ *   Copyright (C) 2010 Ákos Kovács <akoskovacs@gmx.com> 
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,15 +21,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#define APP_VERSION "0.2.1"
-
 #include <QtGui>
+#include "FindDialog.h"
 
 class QAction;
 class QMenu;
-class QTextEdit;
+class QPlainTextEdit;
 class QToolBar;
 class QMainWindow;
+// class FindDialog;
 
 class MainWindow : public QMainWindow
 {
@@ -37,6 +37,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = 0);
+    enum AppVersion { MajorVer = 0, MinorVer = 3 };
     void setArgument(char *);
 
 private slots:
@@ -46,8 +47,13 @@ private slots:
     void saveAs();
     void about();
     void textEditModified();
+    void createFindDialog();
+    void findText(QString, QTextDocument::FindFlags);
 
+protected:
     void closeEvent(QCloseEvent *);
+    void dragEnterEvent(QDragEnterEvent *);
+    void dropEvent(QDropEvent *);
 
  private:
     void createActions();
@@ -68,14 +74,15 @@ private slots:
     bool readFile(QString &fileName);
     bool writeFile(QString &fileName);
 
-    QTextEdit *textEdit;
+    QPlainTextEdit *textEdit;
     QAction *newAction;
     QAction *saveAction;
     QAction *saveAsAction;
     QAction *openAction;
     QAction *undoAction;
     QAction *redoAction;
-    QAction *clearAction;
+    QAction *findAction;
+    QAction *clearAllAction;
     QAction *copyAction;
     QAction *cutAction;
     QAction *pasteAction;
@@ -89,6 +96,8 @@ private slots:
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *aboutMenu;
+
+    QPointer<FindDialog> findDialog;
 
     QString m_savedFileName;
     bool m_isFileNameKnown;

@@ -1,5 +1,13 @@
 gpl_head.txt
 ned
+<<<<<<< HEAD
 ned_hu.qm
 Ned.pro.user
 *~
+=======
+Ned.pro.user
+main.cpp.orig
+*~
+moc_*
+*.o
+>>>>>>> unstable

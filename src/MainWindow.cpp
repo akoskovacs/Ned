@@ -1,7 +1,7 @@
 /*************************************************************************    
  *
  *   Ned - Simple, graphical, cross-platform editor
- *   Copyright (C) 2010 Ákos Kovács 
+ *   Copyright (C) 2010 Ákos Kovács <akoskovacs@gmx.com> 
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,17 +19,23 @@
  **************************************************************************/    
 
 #include "MainWindow.h"
+//#include "FindDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    textEdit = new QTextEdit;
-    setCentralWidget(textEdit);
+    textEdit = new QPlainTextEdit;
+    textEdit->setAcceptDrops(false);
+    setCentralWidget(textEdit); 
+
+    // We enable drop on the whole window
+    setAcceptDrops(true);
 
     m_savedFileName = "";
     m_isFileNameKnown = false;
 
-    connect(textEdit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
+    connect(textEdit, SIGNAL(textChanged())
+            ,this, SLOT(textEditModified()));
 
     setWindowTitle(tr("%1[*] - Ned").arg(tr("Untitled")));
     createActions();
@@ -40,7 +46,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     readSettings();
     setWindowIcon(QIcon(":/images/text-editor.png"));
-
 }
 
 /*
@@ -50,32 +55,36 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::createActions()
 {
     newAction = new QAction(tr("&New"), this);
-    newAction->setIcon(QIcon::fromTheme("document-new", QIcon(":/images/document-new.png")));
+    newAction->setIcon(QIcon::fromTheme("document-new"
+                    ,QIcon(":/images/document-new.png")));
     newAction->setShortcut(QKeySequence::New);
     newAction->setStatusTip(tr("Create new document"));
     connect(newAction, SIGNAL(triggered()), this, SLOT(newFile()));
 
     openAction = new QAction(tr("&Open"), this);
-    openAction->setIcon(QIcon::fromTheme("document-open", QIcon(":/images/document-open.png")));
+    openAction->setIcon(QIcon::fromTheme("document-open"
+                    ,QIcon(":/images/document-open.png")));
     openAction->setShortcut(QKeySequence::Open);
     openAction->setStatusTip(tr("Open an exsisiting document"));
     connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
 
     saveAction = new QAction(tr("&Save"), this);
-    saveAction->setIcon(QIcon::fromTheme("document-save", QIcon(":/images/document-save.png")));
+    saveAction->setIcon(QIcon::fromTheme("document-save"
+                   ,QIcon(":/images/document-save.png")));
     saveAction->setShortcut(QKeySequence::Save);
     saveAction->setStatusTip(tr("Save the edited document"));
     connect(saveAction, SIGNAL(triggered()), this, SLOT(saveFile()));
 
     saveAsAction = new QAction(tr("&Save As"), this);
-    saveAsAction->setIcon(QIcon::fromTheme("document-save-as", QIcon(":/images/document-save-as.png")));
+    saveAsAction->setIcon(QIcon::fromTheme("document-save-as"
+                   ,QIcon(":/images/document-save-as.png")));
     saveAsAction->setShortcut(QKeySequence::SaveAs);
     saveAsAction->setStatusTip(tr("Save as a document"));
-    connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
 
     undoAction = new QAction(tr("&Undo"), this);
     undoAction->setEnabled(false);
-    undoAction->setIcon(QIcon::fromTheme("edit-undo", QIcon(":/images/edit-undo.png")));
+    undoAction->setIcon(QIcon::fromTheme("edit-undo"
+                   ,QIcon(":/images/edit-undo.png")));
     undoAction->setShortcut(QKeySequence::Undo);
     undoAction->setStatusTip(tr("Undo a change in the editor area"));
     connect(undoAction, SIGNAL(triggered()), textEdit, SLOT(undo()));
@@ -83,42 +92,54 @@ void MainWindow::createActions()
 
     redoAction = new QAction(tr("&Redo"), this);
     redoAction->setEnabled(false);
-    redoAction->setIcon(QIcon::fromTheme("edit-redo", QIcon(":/images/edit-redo.png")));
+    redoAction->setIcon(QIcon::fromTheme("edit-redo"
+                   ,QIcon(":/images/edit-redo.png")));
     redoAction->setShortcut(QKeySequence::Redo);
     redoAction->setStatusTip(tr("Redo a change in the editor area"));
     connect(textEdit, SIGNAL(redoAvailable(bool)), redoAction, SLOT(setEnabled(bool)));
     connect(redoAction, SIGNAL(triggered()), textEdit, SLOT(redo()));
 
-    clearAction = new QAction(tr("&Clear"), this);
-    clearAction->setIcon(QIcon::fromTheme("edit-clear", QIcon(":/images/edit-delete.png")));
-    clearAction->setShortcut(QKeySequence::Delete);
-    clearAction->setStatusTip(tr("Delete a part of a text"));
-    connect(clearAction, SIGNAL(triggered()), textEdit, SLOT(clear()));
+    findAction = new QAction(tr("&Find..."), this);
+    findAction->setIcon(QIcon::fromTheme("edit-find"));
+    findAction->setShortcut(QKeySequence::Find);
+    findAction->setStatusTip(tr("Find a text"));
+    connect(findAction, SIGNAL(triggered()), this, SLOT(createFindDialog()));
 
-    copyAction = new QAction(tr("Copy"), this);
+    clearAllAction = new QAction(tr("Cl&ear All"), this);
+    clearAllAction->setIcon(QIcon::fromTheme("edit-clear"
+                   ,QIcon(":/images/edit-delete.png")));
+    clearAllAction->setShortcut(QKeySequence::Delete);
+    clearAllAction->setStatusTip(tr("Delete a part of a text"));
+    connect(clearAllAction, SIGNAL(triggered()), textEdit, SLOT(clear()));
+
+    copyAction = new QAction(tr("&Copy"), this);
     copyAction->setEnabled(false);
-    copyAction->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/images/edit-copy.png")));
+    copyAction->setIcon(QIcon::fromTheme("edit-copy"
+                   ,QIcon(":/images/edit-copy.png")));
     copyAction->setShortcut(QKeySequence::Copy);
     copyAction->setStatusTip(tr("Copy a text part"));
     connect(textEdit, SIGNAL(copyAvailable(bool)),copyAction, SLOT(setEnabled(bool)));
     connect(copyAction, SIGNAL(triggered()), textEdit, SLOT(copy()));
 
-    cutAction = new QAction(tr("&Cut"), this);
+    cutAction = new QAction(tr("C&ut"), this);
     cutAction->setEnabled(false);
-    cutAction->setIcon(QIcon::fromTheme("edit-cut", QIcon(":/images/edit-cut.png")));
+    cutAction->setIcon(QIcon::fromTheme("edit-cut"
+                   ,QIcon(":/images/edit-cut.png")));
     cutAction->setShortcut(QKeySequence::Cut);
     cutAction->setStatusTip(tr("Cut a text part"));
     connect(textEdit, SIGNAL(copyAvailable(bool)), cutAction, SLOT(setEnabled(bool)));
     connect(cutAction, SIGNAL(triggered()), textEdit, SLOT(cut()));
 
     pasteAction = new QAction(tr("&Paste"), this);
-    pasteAction->setIcon(QIcon::fromTheme("edit-paste", QIcon(":/images/edit-paste.png")));
+    pasteAction->setIcon(QIcon::fromTheme("edit-paste"
+                   ,QIcon(":/images/edit-paste.png")));
     pasteAction->setShortcut(QKeySequence::Paste);
     pasteAction->setStatusTip(tr("Paste the cutted text"));
     connect(pasteAction, SIGNAL(triggered()), textEdit, SLOT(paste()));
 
     selectAllAction = new QAction(tr("&Select All"), this);
-    selectAllAction->setIcon(QIcon::fromTheme("edit-select-all", QIcon(":/images/edit-select-all.png")));
+    selectAllAction->setIcon(QIcon::fromTheme("edit-select-all"
+                   ,QIcon(":/images/edit-select-all.png")));
     selectAllAction->setShortcut(QKeySequence::SelectAll);
     selectAllAction->setStatusTip(tr("Select all text in the text editor"));
     connect(selectAllAction, SIGNAL(triggered()), textEdit, SLOT(selectAll()));
@@ -129,14 +150,15 @@ void MainWindow::createActions()
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 
     exitAction = new QAction(tr("Exit"), this);
-    exitAction->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/window-close.png")));
+    exitAction->setIcon(QIcon::fromTheme("application-exit"
+                   ,QIcon(":/images/window-close.png")));
     exitAction->setShortcut(tr("Ctrl+Q"));
     exitAction->setStatusTip(tr("Exit from the application"));
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 }
 
 /* createContextMenus: Create some editing menus for the central
- * widget.In this case this is a QTextEdit.
+ * widget.In this case this is a QPlainTextEdit.
  * It will be appeare when the user clicks to it with the left
  * mouse button.
 */
@@ -162,7 +184,7 @@ void MainWindow::createToolBars()
     editToolBar = addToolBar(tr("&Edit"));
     editToolBar->addAction(undoAction);
     editToolBar->addSeparator();
-    editToolBar->addAction(clearAction);
+    editToolBar->addAction(clearAllAction);
     editToolBar->addAction(copyAction);
     editToolBar->addAction(cutAction);
     editToolBar->addAction(cutAction);
@@ -186,7 +208,9 @@ void MainWindow::createMenus()
     editMenu->addAction(undoAction);
     editMenu->addAction(redoAction);
     editMenu->addSeparator();
-    editMenu->addAction(clearAction);
+    editMenu->addAction(findAction);
+    editMenu->addSeparator();
+    editMenu->addAction(clearAllAction);
     editMenu->addAction(copyAction);
     editMenu->addAction(cutAction);
     editMenu->addAction(pasteAction);
@@ -202,7 +226,7 @@ void MainWindow::createMenus()
 */
 void MainWindow::createStatusBar()
 {
-    QLabel *statusLabel = new QLabel("Ready....");
+    QLabel *statusLabel = new QLabel(tr("Ready...."));
     statusBar()->addWidget(statusLabel);
     statusLabel->setAlignment(Qt::AlignLeft);
 }
@@ -237,6 +261,26 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("text/uri-list"))
+        event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    QList<QUrl> urls = event->mimeData()->urls();
+    if (urls.isEmpty())
+        return;
+    QString fileName = urls.first().toLocalFile();
+
+    if (fileName.isEmpty())
+        return;
+
+    if (readFile(fileName))
+        setCurrentFile(fileName);
+}
+
 void MainWindow::setCurrentFile(const QString &fileName)
 {
     QString currentFile;
@@ -244,7 +288,7 @@ void MainWindow::setCurrentFile(const QString &fileName)
     if (fileName.isEmpty())
         currentFile = tr("Untitled");
     else
-        currentFile = fileName;
+        currentFile = QFileInfo(fileName).fileName();
 
    setWindowModified(false);
 
@@ -273,7 +317,7 @@ void MainWindow::open()
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this
                                         ,tr("Open text files"), "."
-                                        ,tr("Every file (*.*)"));
+                                        ,tr("Every file (*)\nText files (*.txt)"));
     if (!fileName.isEmpty())
         loadFile(fileName);
         m_savedFileName = fileName;
@@ -285,15 +329,14 @@ bool MainWindow::loadFile(QString &fileName)
 {
     if (!readFile(fileName))
     {
-        statusBar()->showMessage("File loading cancelled", 2000);
+        statusBar()->showMessage(tr("File loading cancelled"), 2000);
         return false;
     }
     setCurrentFile(fileName);
-    statusBar()->showMessage("File loaded", 2000);
+    statusBar()->showMessage(tr("File loaded"), 2000);
     return true;
 }
 
-// Need to be implemented
 bool MainWindow::saveFile()
 {
     QString fileName;
@@ -301,13 +344,18 @@ bool MainWindow::saveFile()
     if (!m_isFileNameKnown) {
         fileName = QFileDialog::getSaveFileName(this
                                                 ,tr("Save text files"), "."
-                                                ,tr("Every file (*.*)"));
+                                                ,tr("Every file (*)\nText files (*.txt)"));
         m_savedFileName = fileName;
     }
-    if (!m_savedFileName.isEmpty())
-        writeFile(m_savedFileName);
-    else
+    if (!m_savedFileName.isEmpty()) {
+        if (!QFileInfo(m_savedFileName).isWritable()) {
+            QMessageBox::warning(this, tr("Ned - Error"), tr("The file is not writable"));
+            return false;
+        } else
+            writeFile(m_savedFileName);
+    } else
         return false;
+
     m_isFileNameKnown = true;
     setCurrentFile(m_savedFileName);
     return true;
@@ -317,7 +365,7 @@ void MainWindow::saveAs()
 {
     QString fileName = QFileDialog::getSaveFileName(this
                                     ,tr("Save as text file"), "."
-                                    ,tr("Every file (*.*)"));
+                                    ,tr("Every file (*.*)\nText files (*.txt)"));
 
     if (!fileName.isEmpty())
         writeFile(fileName);
@@ -330,30 +378,45 @@ void MainWindow::newFile()
     mainWin->show();
 }
 
+void MainWindow::createFindDialog()
+{
+  if (!findDialog) {
+        findDialog = new FindDialog(this);
+        connect(findDialog, SIGNAL(find(QString, QTextDocument::FindFlags))
+                ,this ,SLOT(findText(QString, QTextDocument::FindFlags)));
+   }
+
+    //findDialog->exec();
+    findDialog->show();
+    findDialog->raise();
+    findDialog->activateWindow();
+}
+
 void MainWindow::about()
 {
     QMessageBox::about(this
-                       ,tr("About Ned")
-                       ,tr("<b><h3>Ned, version: %1</h3></b>"
-                           "Ned is a simple, cross-platform text editor "
-                           "written in C++, using the Qt4 graphical "
-                           "framework.<br><br>"
-                           "<i>Copyright (C) Akos Kovacs - 2010</i>")
-                           .arg(APP_VERSION));
+               ,tr("About Ned")
+               ,tr("<b><h3>Ned, version %1.%2</h3></b>"
+                   "Ned is a simple, cross-platform text editor "
+                   "written in C++, using the Qt4 graphical "
+                   "framework.<br><br>"
+                   "<i>Copyright (C) Akos Kovacs - 2010</i>")
+                   .arg(MajorVer)
+                   .arg(MinorVer));
 }
 
 bool MainWindow::readFile(QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox::critical(this
-                              ,tr("Critical Error - Ned")
-                              ,tr("An error occured when trying to read"
-                                  "%1 file from the disk").arg(fileName));
+    QMessageBox::critical(this
+                  ,tr("Critical Error - Ned")
+                  ,tr("An error occured when trying to read "
+                      "%1 file from the disk").arg(fileName));
         return false;
     }
     QTextStream in(&file);
-    textEdit->setText(in.readAll());
+    textEdit->setPlainText(in.readAll());
     return true;
 }
 
@@ -362,9 +425,9 @@ bool MainWindow::writeFile(QString &fileName)
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly)) {
         QMessageBox::critical(this
-                              ,tr("Critical Error - Ned")
-                              ,tr("An error occured when trying to write"
-                                  "%1 file to the disk").arg(fileName));
+                  ,tr("Critical Error - Ned")
+                  ,tr("An error occured when trying to write"
+                      "%1 file to the disk").arg(fileName));
         return false;
     }
     QTextStream out(&file);
@@ -384,6 +447,15 @@ void MainWindow::textEditModified()
 void MainWindow::setArgument(char *file)
 {
     QString fileName(file);
-    if (!fileName.isEmpty())
+    if (!fileName.isEmpty()) {
+        m_isFileNameKnown = true;
+        m_savedFileName = fileName;
         loadFile(fileName);
+    }
 }
+
+void MainWindow::findText(QString str, QTextDocument::FindFlags ff)
+{
+    textEdit->find(str, ff);
+}
+

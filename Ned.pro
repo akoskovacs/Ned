@@ -13,8 +13,14 @@ SOURCES += main.cpp\
         MainWindow.cpp
 
 HEADERS  += MainWindow.h
+SOURCES += ./src/main.cpp\
+        ./src/MainWindow.cpp \
+    ./src/FindDialog.cpp
 
-TRANSLATIONS += ned_hu.ts
+HEADERS  += ./src/MainWindow.h \
+    ./src/FindDialog.h
+
+TRANSLATIONS += ./translations/ned_hu.ts
 
 RESOURCES += \
-    ned.qrc
+    Ned.qrc

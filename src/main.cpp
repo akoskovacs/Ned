@@ -1,7 +1,7 @@
 /*************************************************************************    
  *
  *   Ned - Simple, graphical, cross-platform editor
- *   Copyright (C) 2010 Ákos Kovács 
+ *   Copyright (C) 2010 Ákos Kovács <akoskovacs@gmx.com> 
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,7 +18,11 @@
  *
  **************************************************************************/    
 
+<<<<<<< HEAD:main.cpp
 #include <QApplication>
+=======
+#include <QtGui/QApplication>
+>>>>>>> unstable:src/main.cpp
 #include "MainWindow.h"
 #include <QTranslator>
 
@@ -26,7 +30,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QTranslator appTranslator;
-    appTranslator.load("ned_" + QLocale::system().name(), ":/");
+    appTranslator.load("ned_" + QLocale::system().name(), ":/translations");
     app.installTranslator(&appTranslator);
 
     MainWindow *window = new MainWindow();
