@@ -40,11 +40,11 @@ public:
     FindDialog(QWidget *parent=0);
 
 signals:
-    void find(QString &exp, QTextDocument::FindFlags);
+    void find(QString&, QTextDocument::FindFlags);
 
 private slots:
     void findButtonClicked();
-    void enableFindButton(QString &string);
+    void enableFindButton(QString);
 
 private:
     void createWidgets();

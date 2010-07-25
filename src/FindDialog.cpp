@@ -103,7 +103,7 @@ void FindDialog::findButtonClicked()
     emit find(searchString, ff);
 }
 
-void FindDialog::enableFindButton(QString &string)
+void FindDialog::enableFindButton(QString string)
 {
     findButton->setEnabled(!string.isEmpty());
 }

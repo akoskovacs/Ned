@@ -329,11 +329,11 @@ bool MainWindow::loadFile(QString &fileName)
 {
     if (!readFile(fileName))
     {
-        statusBar()->showMessage("File loading cancelled", 2000);
+        statusBar()->showMessage(tr("File loading cancelled"), 2000);
         return false;
     }
     setCurrentFile(fileName);
-    statusBar()->showMessage("File loaded", 2000);
+    statusBar()->showMessage(tr("File loaded"), 2000);
     return true;
 }
 
@@ -349,7 +349,7 @@ bool MainWindow::saveFile()
     }
     if (!m_savedFileName.isEmpty()) {
         if (!QFileInfo(m_savedFileName).isWritable()) {
-            QMessageBox::warning(this, "Ned - Error", "The file is not writable");
+            QMessageBox::warning(this, tr("Ned - Error"), tr("The file is not writable"));
             return false;
         } else
             writeFile(m_savedFileName);
@@ -382,8 +382,8 @@ void MainWindow::createFindDialog()
 {
   if (!findDialog) {
         findDialog = new FindDialog(this);
-        connect(findDialog, SIGNAL(find(QString, FindFlag))
-                ,this ,SLOT(findText(QString, FindFlag)));
+        connect(findDialog, SIGNAL(find(QString, QTextDocument::FindFlags))
+                ,this ,SLOT(findText(QString, QTextDocument::FindFlags)));
    }
 
     //findDialog->exec();
@@ -454,7 +454,7 @@ void MainWindow::setArgument(char *file)
     }
 }
 
-void MainWindow::findText(QString &str, QTextDocument::FindFlag ff)
+void MainWindow::findText(QString &str, QTextDocument::FindFlags ff)
 {
     textEdit->find(str, ff);
 }
