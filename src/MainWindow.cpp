@@ -317,7 +317,7 @@ void MainWindow::open()
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this
                                         ,tr("Open text files"), "."
-                                        ,tr("Every file (*.*)\nText files (*.txt)"));
+                                        ,tr("Every file (*)\nText files (*.txt)"));
     if (!fileName.isEmpty())
         loadFile(fileName);
         m_savedFileName = fileName;
@@ -344,7 +344,7 @@ bool MainWindow::saveFile()
     if (!m_isFileNameKnown) {
         fileName = QFileDialog::getSaveFileName(this
                                                 ,tr("Save text files"), "."
-                                                ,tr("Every file (*.*)\nText files (*.txt)"));
+                                                ,tr("Every file (*)\nText files (*.txt)"));
         m_savedFileName = fileName;
     }
     if (!m_savedFileName.isEmpty()) {
