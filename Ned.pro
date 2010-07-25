@@ -9,10 +9,6 @@ QT       += core gui
 TARGET = Ned
 TEMPLATE = app
 
-SOURCES += main.cpp\
-        MainWindow.cpp
-
-HEADERS  += MainWindow.h
 SOURCES += ./src/main.cpp\
         ./src/MainWindow.cpp \
     ./src/FindDialog.cpp
