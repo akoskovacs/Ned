@@ -35,8 +35,11 @@ FindDialog::FindDialog(QWidget *parent)
     setupLayouts();
 
     findButton->setEnabled(false);
+    findButton->setDefault(true);
+    findEdit->setFocus();
     whatLabel->setBuddy(findEdit);
     findWordsBox->setChecked(true);
+    searchBackwardBox->setChecked(true);
 
     connect(findEdit, SIGNAL(textChanged(QString)),
             this, SLOT(enableFindButton(QString)));

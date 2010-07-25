@@ -454,7 +454,7 @@ void MainWindow::setArgument(char *file)
     }
 }
 
-void MainWindow::findText(QString &str, QTextDocument::FindFlags ff)
+void MainWindow::findText(QString str, QTextDocument::FindFlags ff)
 {
     textEdit->find(str, ff);
 }
