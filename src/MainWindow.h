@@ -37,7 +37,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = 0);
-    enum AppVersion { MajorVer = 0, MinorVer = 2 };
+    enum AppVersion { MajorVer = 0, MinorVer = 3 };
     void setArgument(char *);
 
 private slots:
