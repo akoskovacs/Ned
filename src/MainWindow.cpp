@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(textEdit, SIGNAL(textChanged())
             ,this, SLOT(textEditModified()));
+    connect(textEdit, SIGNAL(textChanged())
+            ,this, SLOT(updateStatusBar()));
 
     setWindowTitle(tr("%1[*] - Ned").arg(tr("Untitled")));
     createActions();
@@ -46,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     readSettings();
     setWindowIcon(QIcon(":/images/text-editor.png"));
+
 }
 
 /*
@@ -226,9 +229,39 @@ void MainWindow::createMenus()
 */
 void MainWindow::createStatusBar()
 {
-    QLabel *statusLabel = new QLabel(tr("Ready...."));
-    statusBar()->addWidget(statusLabel);
-    statusLabel->setAlignment(Qt::AlignLeft);
+    characters = new QLabel("Lines");
+    lines = new QLabel("bla");
+    mode = new QLabel;
+
+    statusBar()->addWidget(characters);
+    statusBar()->addWidget(lines);
+    statusBar()->addWidget(mode);
+
+    characters->setAlignment(Qt::AlignLeft);
+    lines->setAlignment(Qt::AlignHCenter);
+    mode->setAlignment(Qt::AlignRight);
+
+    characters->show();
+    lines->show();
+    mode->show();
+
+    updateStatusBar();
+}
+
+void MainWindow::updateStatusBar()
+{
+    QTextDocument *textDocument = textEdit->document();
+    characters->setText(tr("Total characters: %1")
+                        .arg(textDocument->characterCount()-1));
+    lines->setText(tr("Total lines: %1")
+                   .arg(textDocument->lineCount()));
+
+    if (!m_savedFileName.isEmpty()) {
+        if (!QFileInfo(m_savedFileName).isWritable())
+                mode->setText("Access: Read only");
+    } else  {
+                 mode->setText("Access: RW");
+    }
 }
 
 /*
@@ -293,6 +326,7 @@ void MainWindow::setCurrentFile(const QString &fileName)
    setWindowModified(false);
 
    setWindowTitle(tr("%1[*] - Ned").arg(currentFile));
+   updateStatusBar();
 }
 
 bool MainWindow::maybeSave()

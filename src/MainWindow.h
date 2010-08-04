@@ -29,6 +29,7 @@ class QMenu;
 class QPlainTextEdit;
 class QToolBar;
 class QMainWindow;
+class QLabel;
 // class FindDialog;
 
 class MainWindow : public QMainWindow
@@ -49,6 +50,8 @@ private slots:
     void textEditModified();
     void createFindDialog();
     void findText(QString, QTextDocument::FindFlags);
+
+    void updateStatusBar();
 
 protected:
     void closeEvent(QCloseEvent *);
@@ -98,6 +101,10 @@ protected:
     QMenu *aboutMenu;
 
     QPointer<FindDialog> findDialog;
+
+    QLabel *characters;
+    QLabel *lines;
+    QLabel *mode;
 
     QString m_savedFileName;
     bool m_isFileNameKnown;
