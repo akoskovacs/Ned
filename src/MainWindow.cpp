@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     textEdit = new QPlainTextEdit;
     textEdit->setAcceptDrops(false);
-    setCentralWidget(textEdit); 
+    setCentralWidget(textEdit);
 
     // We enable drop on the whole window
     setAcceptDrops(true);
@@ -83,6 +83,7 @@ void MainWindow::createActions()
                    ,QIcon(":/images/document-save-as.png")));
     saveAsAction->setShortcut(QKeySequence::SaveAs);
     saveAsAction->setStatusTip(tr("Save as a document"));
+    connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
 
     undoAction = new QAction(tr("&Undo"), this);
     undoAction->setEnabled(false);
