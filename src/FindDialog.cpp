@@ -39,7 +39,7 @@ FindDialog::FindDialog(QWidget *parent)
     findEdit->setFocus();
     whatLabel->setBuddy(findEdit);
     findWordsBox->setChecked(true);
-    searchBackwardBox->setChecked(true);
+    searchBackwardBox->setChecked(false);
 
     connect(findEdit, SIGNAL(textChanged(QString)),
             this, SLOT(enableFindButton(QString)));
