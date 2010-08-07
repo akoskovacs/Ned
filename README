@@ -1,7 +1,7 @@
 Overview
 =========
 
-Simple, graphical, multiplatform editor written in C++ using the
+Ned is a simple, graphical, multiplatform editor written in C++ using the
 Qt4 graphical framework.
 
 > It can run on many platforms including:
@@ -13,7 +13,7 @@ Qt4 graphical framework.
 These binaries can gathered from 
 [Sourceforge](www.sourceforge.net/projects/ned "Sourceforge")
 
-Installition
+Installation
 ============
 
 Just download the binaries and use your platform
@@ -32,10 +32,15 @@ http://git.gitorious.org/ned/ned.git
 
 * To compile it, you need the Qt libraries and the qmake tool! *
 
-## Instructions ##
-0. If you download the tarball, first unzip it
-1. Go to the source directory
-2. Run qmake Ned.pro
-3. Run make
-4. If everything works only start the
- executable with the ./Ned command
+## Instructions for compilation ##
+
+> 0. If you download the tarball, first unzip it
+
+> 1. Go to the source directory
+
+> 2. Run qmake Ned.pro
+
+> 3. Run make
+
+> 4. If everything works only start the
+> executable with the ./Ned command
