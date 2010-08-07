@@ -297,7 +297,7 @@ void MainWindow::writeSettings()
 /* closeEvent: This function invoked every time when
  * the user wants to quit the application. If the 
  * document has unwritten modifications, a popup
- * window will appeare and ask the user of the 
+ * window will appear and ask the user of the
  * modifications. If the answer is Cancel the event
  * will ignored.
 */
