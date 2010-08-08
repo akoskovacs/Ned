@@ -20,7 +20,7 @@ These binaries can gathered from
 Installation
 =============
 
-Just download the binaries from the Sourceforge and install in your platform
+Just download the binaries from the Sourceforge and install in your platform's
 specific way.
 
 Compilation
