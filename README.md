@@ -1,7 +1,3 @@
-Ned editor readme file
-=================================================
-with markdown formatting
-
 Overview
 =========
 
