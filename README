@@ -27,7 +27,7 @@ http://github.com/akoskovacs/Ned/downloads or http://gitorious.org/ned/ned/trees
 The third way to clone the whole git repository: (If you have preinstalled git)
 http://git.gitorious.org/ned/ned.git
 
-To compile it, you need the Qt libraries and the qmake tool!
+To compile it, you need the Qt libraries and the CMake tool!
 
 ## Instructions ##
 
@@ -35,7 +35,7 @@ To compile it, you need the Qt libraries and the qmake tool!
 
 1. Go to the source directory
 
-2. Run qmake Ned.pro
+2. Run cmake .
 
 3. Run make
 

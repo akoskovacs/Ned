@@ -16,8 +16,7 @@ These binaries can gathered from
 Installation
 =============
 
-Just download the binaries from the Sourceforge and install in your platform's
-specific way.
+Just download the binaries from the Sourceforge and install in your platform's specific way.
 
 Compilation
 ============
@@ -29,7 +28,7 @@ Download the sourcecode tarball from
 The third way to clone the whole git repository: (If you have preinstalled git)
 http://git.gitorious.org/ned/ned.git
 
-*To compile it, you need the Qt libraries and the qmake tool!*
+*To compile it, you need the Qt libraries and the CMake tool!*
 
 ## Instructions ##
 
@@ -37,7 +36,7 @@ http://git.gitorious.org/ned/ned.git
 
 1. Go to the source directory
 
-2. $ qmake Ned.pro
+2. $ cmake Ned.pro
 
 3. $ make
 
