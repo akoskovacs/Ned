@@ -34,18 +34,21 @@ FindDialog::FindDialog(QWidget *parent)
     createWidgets();
     setupLayouts();
 
-    findButton->setEnabled(false);
-    findButton->setDefault(true);
     findEdit->setFocus();
+    findNextButton->setEnabled(false);
+    findNextButton->setDefault(true);
+    findPreviousButton->setEnabled(false);
     whatLabel->setBuddy(findEdit);
     findWordsBox->setChecked(true);
-    searchBackwardBox->setChecked(false);
 
     connect(findEdit, SIGNAL(textChanged(QString)),
-            this, SLOT(enableFindButton(QString)));
+            this, SLOT(enableFindButtons(QString)));
 
-    connect(findButton, SIGNAL(clicked()),
-            this, SLOT(findButtonClicked()));
+    connect(findNextButton, SIGNAL(clicked()),
+            this, SLOT(findNextButtonClicked()));
+
+    connect(findPreviousButton, SIGNAL(clicked()),
+            this, SLOT(findPreviousButtonClicked()));
 
     connect(closeButton, SIGNAL(clicked()),
             this, SLOT(close()));
@@ -56,12 +59,12 @@ FindDialog::FindDialog(QWidget *parent)
 
 void FindDialog::createWidgets()
 {
-    findButton = new QPushButton(tr("&Find"));
+    findNextButton = new QPushButton(tr("Find &next >>"));
+    findPreviousButton = new QPushButton(tr("Find &previous <<"));
     closeButton = new QPushButton(tr("&Close"));
     findEdit = new QLineEdit;
     whatLabel = new QLabel(tr("Find &what"));
     sensitivityBox = new QCheckBox(tr("Case &sesitive"));
-    searchBackwardBox = new QCheckBox(tr("Search &Backward"));
     findWordsBox = new QCheckBox(tr("Find w&hole words"));
     topLeftLayout = new QHBoxLayout;
     mainLayout = new QHBoxLayout;
@@ -77,10 +80,10 @@ void FindDialog::setupLayouts()
     leftLayout->addLayout(topLeftLayout);
     leftLayout->addStretch();
     leftLayout->addWidget(sensitivityBox);
-    leftLayout->addWidget(searchBackwardBox);
     leftLayout->addWidget(findWordsBox);
 
-    rightLayout->addWidget(findButton);
+    rightLayout->addWidget(findNextButton);
+    rightLayout->addWidget(findPreviousButton);
     rightLayout->addStretch();
     rightLayout->addWidget(closeButton);
 
@@ -89,7 +92,7 @@ void FindDialog::setupLayouts()
     setLayout(mainLayout);
 }
 
-void FindDialog::findButtonClicked()
+void FindDialog::findNextButtonClicked()
 {
     QString searchString = findEdit->text();
 
@@ -97,16 +100,29 @@ void FindDialog::findButtonClicked()
        if (sensitivityBox->isChecked())
             ff |= QTextDocument::FindCaseSensitively;
 
-       if (searchBackwardBox->isChecked())
-           ff |= QTextDocument::FindBackward;
-
        if (findWordsBox->isChecked())
            ff |= QTextDocument::FindWholeWords;
 
     emit find(searchString, ff);
 }
 
-void FindDialog::enableFindButton(QString string)
+void FindDialog::findPreviousButtonClicked()
 {
-    findButton->setEnabled(!string.isEmpty());
+    QString searchString = findEdit->text();
+
+    QTextDocument::FindFlags ff;
+       if (sensitivityBox->isChecked())
+            ff |= QTextDocument::FindCaseSensitively;
+
+       if (findWordsBox->isChecked())
+           ff |= QTextDocument::FindWholeWords;
+
+       ff |= QTextDocument::FindBackward;
+
+    emit find(searchString, ff);
+}
+void FindDialog::enableFindButtons(QString string)
+{
+    findNextButton->setEnabled(!string.isEmpty());
+    findPreviousButton->setEnabled(!string.isEmpty());
 }
