@@ -1,0 +1,43 @@
+Overview
+=========
+
+Ned is a simple, graphical, multiplatform editor written in C++ using the
+Qt4 graphical framework.
+
+It can run on many platforms including:
+
+ * Windows
+ * GNU/Linux
+ * FreeBSD
+
+These binaries can gathered from www.sourceforge.net/projects/ned
+
+Installation
+=============
+
+Just download the binaries and use your platform's
+specific way.
+
+Compilation
+============
+
+Download the sourcecode tarball from 
+http://github.com/akoskovacs/Ned/downloads or http://gitorious.org/ned/ned/trees/unstable
+
+The third way to clone the whole git repository: (If you have preinstalled git)
+http://git.gitorious.org/ned/ned.git
+
+To compile it, you need the Qt libraries and the CMake tool!
+
+## Instructions ##
+
+0. If you download the tarball, first unzip it
+
+1. Go to the source directory
+
+2. Run cmake .
+
+3. Run make
+
+4. If everything works only start the
+ executable with the ./Ned command

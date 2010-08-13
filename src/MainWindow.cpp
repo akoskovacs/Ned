@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     textEdit = new QPlainTextEdit;
     textEdit->setAcceptDrops(false);
-    setCentralWidget(textEdit); 
+    setCentralWidget(textEdit);
 
     // We enable drop on the whole window
     setAcceptDrops(true);
@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(textEdit, SIGNAL(textChanged())
             ,this, SLOT(textEditModified()));
+    connect(textEdit, SIGNAL(textChanged())
+            ,this, SLOT(updateStatusBar()));
 
     setWindowTitle(tr("%1[*] - Ned").arg(tr("Untitled")));
     createActions();
@@ -46,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     readSettings();
     setWindowIcon(QIcon(":/images/text-editor.png"));
+
 }
 
 /*
@@ -80,6 +83,7 @@ void MainWindow::createActions()
                    ,QIcon(":/images/document-save-as.png")));
     saveAsAction->setShortcut(QKeySequence::SaveAs);
     saveAsAction->setStatusTip(tr("Save as a document"));
+    connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
 
     undoAction = new QAction(tr("&Undo"), this);
     undoAction->setEnabled(false);
@@ -226,14 +230,49 @@ void MainWindow::createMenus()
 */
 void MainWindow::createStatusBar()
 {
-    QLabel *statusLabel = new QLabel(tr("Ready...."));
-    statusBar()->addWidget(statusLabel);
-    statusLabel->setAlignment(Qt::AlignLeft);
+    characters = new QLabel("Lines");
+    lines = new QLabel("bla");
+    mode = new QLabel;
+
+    statusBar()->addWidget(characters);
+    statusBar()->addWidget(lines);
+    statusBar()->addWidget(mode);
+
+    characters->setAlignment(Qt::AlignLeft);
+    lines->setAlignment(Qt::AlignHCenter);
+    mode->setAlignment(Qt::AlignRight);
+
+    characters->show();
+    lines->show();
+    mode->show();
+
+    updateStatusBar();
 }
 
 /*
- * readSettings: Here is the settings handlers. Now we only read and
- * write the geometry.
+ * updateStatusBar: This slot invoked every tine when
+ * the document modified, so it write the total character,
+ * line count and the access mode to the status bar.
+*/
+void MainWindow::updateStatusBar()
+{
+    QTextDocument *textDocument = textEdit->document();
+    characters->setText(tr("Total characters: %1")
+                        .arg(textDocument->characterCount()-1));
+    lines->setText(tr("Total lines: %1")
+                   .arg(textDocument->lineCount()));
+
+    if (!m_savedFileName.isEmpty()) {
+        if (!QFileInfo(m_savedFileName).isWritable())
+                mode->setText("Access: Read only");
+    } else  {
+                 mode->setText("Access: RW");
+    }
+}
+
+/*
+ * readSettings: It reads the settings on every startup.
+ * Now the setting only contain the main window geometry.
  */
 void MainWindow::readSettings()
 {
@@ -243,6 +282,10 @@ void MainWindow::readSettings()
     settings.endGroup();
 }
 
+/*
+ * writeSettings: It writes the settings before the user
+ * close the application. Only writes the geometry.
+*/
 void MainWindow::writeSettings()
 {
     QSettings settings("Ak Software", "Ned");
@@ -251,6 +294,13 @@ void MainWindow::writeSettings()
     settings.endGroup();
 }
 
+/* closeEvent: This function invoked every time when
+ * the user wants to quit the application. If the 
+ * document has unwritten modifications, a popup
+ * window will appear and ask the user of the
+ * modifications. If the answer is Cancel the event
+ * will ignored.
+*/
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (maybeSave()) {
@@ -261,12 +311,19 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
+/*
+ * dragEnterEvent: It accepts the drag events.
+*/
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasFormat("text/uri-list"))
         event->acceptProposedAction();
 }
 
+/*
+ * dropEvent: It handles the drop events, by open the
+ * file which has dropped into the application's drag area.
+*/
 void MainWindow::dropEvent(QDropEvent *event)
 {
     QList<QUrl> urls = event->mimeData()->urls();
@@ -281,6 +338,9 @@ void MainWindow::dropEvent(QDropEvent *event)
         setCurrentFile(fileName);
 }
 
+/* setCurrentFile: It set the current titlebar, statusbar when
+ * a new file created, opened, saved, etc...
+*/
 void MainWindow::setCurrentFile(const QString &fileName)
 {
     QString currentFile;
@@ -293,8 +353,13 @@ void MainWindow::setCurrentFile(const QString &fileName)
    setWindowModified(false);
 
    setWindowTitle(tr("%1[*] - Ned").arg(currentFile));
+   updateStatusBar();
 }
 
+/* maybeSave: Actived, every time when the user wants to quit
+ * somehow, and popup a question if the document has unwritten changes.
+*/
+// TODO: Need language-independent buttons!
 bool MainWindow::maybeSave()
 {
     if (isWindowModified()) {

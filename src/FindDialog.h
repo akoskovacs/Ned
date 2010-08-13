@@ -43,19 +43,20 @@ signals:
     void find(QString, QTextDocument::FindFlags);
 
 private slots:
-    void findButtonClicked();
-    void enableFindButton(QString);
+    void findNextButtonClicked();
+    void findPreviousButtonClicked();
+    void enableFindButtons(QString);
 
 private:
     void createWidgets();
     void setupLayouts();
 
-    QPushButton *findButton;
+    QPushButton *findNextButton;
+    QPushButton *findPreviousButton;
     QPushButton *closeButton;
     QLineEdit *findEdit;
     QLabel *whatLabel;
     QCheckBox *sensitivityBox;
-    QCheckBox *searchBackwardBox;
     QCheckBox *findWordsBox;
     QHBoxLayout *topLeftLayout;
     QHBoxLayout *mainLayout;
