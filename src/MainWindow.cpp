@@ -413,7 +413,8 @@ bool MainWindow::saveFile()
         m_savedFileName = fileName;
     }
     if (!m_savedFileName.isEmpty()) {
-        if (!QFileInfo(m_savedFileName).isWritable()) {
+        if (QFileInfo(m_savedFileName).exists()
+                && !QFileInfo(m_savedFileName).isWritable()) {
             QMessageBox::warning(this, tr("Ned - Error"), tr("The file is not writable"));
             return false;
         } else
