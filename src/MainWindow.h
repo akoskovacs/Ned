@@ -50,6 +50,7 @@ private slots:
     void textEditModified();
     void createFindDialog();
     void findText(QString, QTextDocument::FindFlags);
+    void pasteDateTime();
 
     void updateStatusBar();
 
@@ -92,12 +93,14 @@ protected:
     QAction *selectAllAction;
     QAction *aboutAction;
     QAction *exitAction;
+    QAction *pasteDateTimeAction;
 
     QToolBar *baseToolBar;
     QToolBar *editToolBar;
 
     QMenu *fileMenu;
     QMenu *editMenu;
+    QMenu *pasteMenu;
     QMenu *aboutMenu;
 
     QPointer<FindDialog> findDialog;
