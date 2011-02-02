@@ -264,9 +264,9 @@ void MainWindow::updateStatusBar()
 
     if (!m_savedFileName.isEmpty()) {
         if (!QFileInfo(m_savedFileName).isWritable())
-                mode->setText("Access: Read only");
+                mode->setText(tr("Access: Read only"));
     } else  {
-                 mode->setText("Access: RW");
+                 mode->setText(tr("Access: RW"));
     }
 }
 
@@ -399,6 +399,7 @@ bool MainWindow::loadFile(QString &fileName)
     }
     setCurrentFile(fileName);
     statusBar()->showMessage(tr("File loaded"), 2000);
+    updateStatusBar();
     return true;
 }
 
