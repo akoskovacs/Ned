@@ -540,5 +540,6 @@ void MainWindow::findText(QString str, QTextDocument::FindFlags ff)
 
 void MainWindow::pasteDateTime()
 {
-    textEdit->textCursor().insertText(QDateTime::currentDateTime().toString());
+    textEdit->textCursor()
+            .insertText(QDateTime::currentDateTime().toString());
 }
