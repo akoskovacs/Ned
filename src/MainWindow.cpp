@@ -19,6 +19,8 @@
  **************************************************************************/    
 
 #include "MainWindow.h"
+#include <QDateTime>
+
 //#include "FindDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -159,6 +161,13 @@ void MainWindow::createActions()
     exitAction->setShortcut(tr("Ctrl+Q"));
     exitAction->setStatusTip(tr("Exit from the application"));
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
+
+    pasteDateTimeAction = new QAction(tr("Pate Date and Time"), this);
+    pasteDateTimeAction->setIcon(QIcon::fromTheme("edit-paste"
+                   ,QIcon(":/images/edit-paste.png")));
+    pasteDateTimeAction->setShortcut(tr("Ctrl+D"));
+    pasteDateTimeAction->setStatusTip(tr("Paste the current date and time"));
+    connect(pasteDateTimeAction, SIGNAL(triggered()), this, SLOT(pasteDateTime()));
 }
 
 /* createContextMenus: Create some editing menus for the central
@@ -221,6 +230,9 @@ void MainWindow::createMenus()
     editMenu->addSeparator();
     editMenu->addAction(selectAllAction);
 
+    pasteMenu = menuBar()->addMenu(tr("&Paste"));
+    pasteMenu->addAction(pasteDateTimeAction);
+
     aboutMenu = menuBar()->addMenu(tr("&Help"));
     aboutMenu->addAction(aboutAction);
 }
@@ -264,9 +276,9 @@ void MainWindow::updateStatusBar()
 
     if (!m_savedFileName.isEmpty()) {
         if (!QFileInfo(m_savedFileName).isWritable())
-                mode->setText("Access: Read only");
+                mode->setText(tr("Access: Read only"));
     } else  {
-                 mode->setText("Access: RW");
+                 mode->setText(tr("Access: RW"));
     }
 }
 
@@ -399,6 +411,7 @@ bool MainWindow::loadFile(QString &fileName)
     }
     setCurrentFile(fileName);
     statusBar()->showMessage(tr("File loaded"), 2000);
+    updateStatusBar();
     return true;
 }
 
@@ -413,7 +426,8 @@ bool MainWindow::saveFile()
         m_savedFileName = fileName;
     }
     if (!m_savedFileName.isEmpty()) {
-        if (!QFileInfo(m_savedFileName).isWritable()) {
+        if (QFileInfo(m_savedFileName).exists()
+                && !QFileInfo(m_savedFileName).isWritable()) {
             QMessageBox::warning(this, tr("Ned - Error"), tr("The file is not writable"));
             return false;
         } else
@@ -524,3 +538,8 @@ void MainWindow::findText(QString str, QTextDocument::FindFlags ff)
     textEdit->find(str, ff);
 }
 
+void MainWindow::pasteDateTime()
+{
+    textEdit->textCursor()
+            .insertText(QDateTime::currentDateTime().toString());
+}
