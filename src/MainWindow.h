@@ -21,6 +21,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#define APP_VERSION "0.3-alpha2"
+
 #include <QtGui>
 #include "FindDialog.h"
 
@@ -38,7 +40,6 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = 0);
-    enum AppVersion { MajorVer = 0, MinorVer = 3 };
     void setArgument(char *);
 
 private slots:
