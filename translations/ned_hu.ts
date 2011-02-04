@@ -206,12 +206,13 @@ Szöveg fájlok (*.txt)</translation>
         <translation>Fájl betöltve</translation>
     </message>
     <message>
+        <location filename="../src/MainWindow.cpp" line="478"/>
         <source>&lt;b&gt;&lt;h3&gt;Ned, version %1.%2&lt;/h3&gt;&lt;/b&gt;Ned is a simple, cross-platform text editor written in C++, using the Qt4 graphical framework.&lt;br&gt;&lt;br&gt;&lt;i&gt;Copyright (C) Akos Kovacs - 2010&lt;/i&gt;</source>
         <translation type="obsolete">&lt;b&gt;&lt;h3&gt;Ned, verzió %1.%2&lt;/h3&gt;&lt;/b&gt;A Ned egy egyszerű, multiplatform, grafikus szövegszerkesztő. C++-ban íródott, a Qt grafikus toolkit használatával&lt;br&gt;&lt;i&gt;Copyright (C) Akos Kovacs - 2010&lt;/i&gt;
 </translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="492"/>
+        <location filename="../src/MainWindow.cpp" line="493"/>
         <source>An error occured when trying to read %1 file from the disk</source>
         <translation>Hiba történt a %1 fájl olvasása közben</translation>
     </message>
@@ -391,8 +392,8 @@ Szeretné menteni a változásokat?</translation>
         <translation type="obsolete">Ned egy egyszerű szöveg-szerkesztő (editor) C++-ban írva. A Qt4-es grafikus keretrendszert használja. Copyright (C) Ákos Kovács - 2010</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="491"/>
-        <location filename="../src/MainWindow.cpp" line="506"/>
+        <location filename="../src/MainWindow.cpp" line="492"/>
+        <location filename="../src/MainWindow.cpp" line="507"/>
         <source>Critical Error - Ned</source>
         <translation>Kritikus hiba - Ned</translation>
     </message>
@@ -401,7 +402,7 @@ Szeretné menteni a változásokat?</translation>
         <translation type="obsolete">Hiba történt a %1 fájl megnyitása közben</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="507"/>
+        <location filename="../src/MainWindow.cpp" line="508"/>
         <source>An error occured when trying to write%1 file to the disk</source>
         <translation>Hiba történt a %1 fájl írása közben</translation>
     </message>
