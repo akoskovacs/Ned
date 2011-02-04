@@ -163,7 +163,7 @@
     <message>
         <location filename="../src/MainWindow.cpp" line="175"/>
         <source>Set to defaults</source>
-        <translation>Alapértelmetett értékek visszaállítás</translation>
+        <translation>Alapértelmetett értékek visszaállítása</translation>
     </message>
     <message>
         <location filename="../src/MainWindow.cpp" line="176"/>

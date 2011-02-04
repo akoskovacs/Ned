@@ -11,10 +11,12 @@ TEMPLATE = app
 
 SOURCES += src/main.cpp \
         src/MainWindow.cpp \
-        src/FindDialog.cpp
+        src/FindDialog.cpp \
+    src/QuickDialog.cpp
 
 HEADERS  += src/MainWindow.h \
-            src/FindDialog.h
+            src/FindDialog.h \
+    src/QuickDialog.h
 
 TRANSLATIONS += translations/ned_hu.ts
 

@@ -21,6 +21,7 @@
 #include "MainWindow.h"
 #include <QDateTime>
 #include <QFontDialog>
+#include <QDockWidget>
 //#include "FindDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -175,6 +176,11 @@ void MainWindow::createActions()
     defaultsAction = new QAction(tr("Set to defaults"), this);
     defaultsAction->setStatusTip(tr("Set everything to it's default setting, like font"));
     connect(defaultsAction, SIGNAL(triggered()), this, SLOT(setDefaults()));
+
+    quickDialogAction = new QAction(tr("Show QuickFile..."), this);
+    quickDialogAction->setCheckable(true);
+    connect(quickDialogAction, SIGNAL(triggered(bool))
+            , this, SLOT(showQuickDialog(bool)));
 }
 
 /* createContextMenus: Create some editing menus for the central
@@ -223,6 +229,9 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveAsAction);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
+
+    viewMenu = menuBar()->addMenu(tr("&View"));
+    viewMenu->addAction(quickDialogAction);
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(undoAction);
@@ -576,4 +585,19 @@ void MainWindow::setDefaults()
     QFont dFont = QApplication::font();
     textEdit->setFont(dFont);
     currentFont = dFont;
+}
+
+void MainWindow::showQuickDialog(bool show)
+{
+    if (!show) {
+        quickDialog->hide();
+        quickDialogDock->hide();
+    }
+
+    quickDialogDock = new QDockWidget(tr("Quick File Chooser"), this);
+    quickDialogDock->setAllowedAreas(Qt::LeftDockWidgetArea
+                                    | Qt::RightDockWidgetArea);
+    quickDialog = new QuickDialog(this);
+    quickDialogDock->setWidget(quickDialog);
+    addDockWidget(Qt::LeftDockWidgetArea, quickDialogDock);
 }

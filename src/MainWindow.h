@@ -25,6 +25,7 @@
 
 #include <QtGui>
 #include "FindDialog.h"
+#include "QuickDialog.h"
 
 class QAction;
 class QMenu;
@@ -54,6 +55,7 @@ private slots:
     void pasteDateTime();
     void selectFont();
     void setDefaults();
+    void showQuickDialog(bool);
 
     void updateStatusBar();
 
@@ -82,6 +84,7 @@ protected:
     bool writeFile(QString &fileName);
 
     QPlainTextEdit *textEdit;
+    QDockWidget *quickDialogDock;
     QAction *newAction;
     QAction *saveAction;
     QAction *saveAsAction;
@@ -99,17 +102,20 @@ protected:
     QAction *pasteDateTimeAction;
     QAction *fontDialogAction;
     QAction *defaultsAction;
+    QAction *quickDialogAction;
 
     QToolBar *baseToolBar;
     QToolBar *editToolBar;
 
     QMenu *fileMenu;
+    QMenu *viewMenu;
     QMenu *editMenu;
     QMenu *pasteMenu;
     QMenu *settingsMenu;
     QMenu *aboutMenu;
 
     QPointer<FindDialog> findDialog;
+    QPointer<QuickDialog> quickDialog;
 
     QLabel *characters;
     QLabel *lines;
