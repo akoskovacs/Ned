@@ -20,7 +20,7 @@
 
 #include "MainWindow.h"
 #include <QDateTime>
-
+#include <QFontDialog>
 //#include "FindDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -50,7 +50,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     readSettings();
     setWindowIcon(QIcon(":/images/text-editor.png"));
-
 }
 
 /*
@@ -168,6 +167,14 @@ void MainWindow::createActions()
     pasteDateTimeAction->setShortcut(tr("Ctrl+D"));
     pasteDateTimeAction->setStatusTip(tr("Paste the current date and time"));
     connect(pasteDateTimeAction, SIGNAL(triggered()), this, SLOT(pasteDateTime()));
+
+    fontDialogAction = new QAction(tr("Select font ..."), this);
+    fontDialogAction->setStatusTip(tr("Select the font for the text area"));
+    connect(fontDialogAction, SIGNAL(triggered()), this, SLOT(selectFont()));
+
+    defaultsAction = new QAction(tr("Set to defaults"), this);
+    defaultsAction->setStatusTip(tr("Set everything to it's default setting, like font"));
+    connect(defaultsAction, SIGNAL(triggered()), this, SLOT(setDefaults()));
 }
 
 /* createContextMenus: Create some editing menus for the central
@@ -233,6 +240,10 @@ void MainWindow::createMenus()
     pasteMenu = menuBar()->addMenu(tr("&Paste"));
     pasteMenu->addAction(pasteDateTimeAction);
 
+    settingsMenu = menuBar()->addMenu(tr("&Settings"));
+    settingsMenu->addAction(fontDialogAction);
+    settingsMenu->addAction(defaultsAction);
+
     aboutMenu = menuBar()->addMenu(tr("&Help"));
     aboutMenu->addAction(aboutAction);
 }
@@ -288,9 +299,13 @@ void MainWindow::updateStatusBar()
  */
 void MainWindow::readSettings()
 {
-    QSettings settings("Ak Software", "Ned");
+    QSettings settings("Akos Kovacs", "Ned");
     settings.beginGroup("Window");
     restoreGeometry(settings.value("geometry").toByteArray());
+    settings.endGroup();
+    settings.beginGroup("Other");
+    currentFont = settings.value("font").toString();
+    textEdit->setFont(currentFont);
     settings.endGroup();
 }
 
@@ -300,9 +315,12 @@ void MainWindow::readSettings()
 */
 void MainWindow::writeSettings()
 {
-    QSettings settings("Ak Software", "Ned");
+    QSettings settings("Akos Kovacs", "Ned");
     settings.beginGroup("Window");
     settings.setValue("geometry", saveGeometry());
+    settings.endGroup();
+    settings.beginGroup("Other");
+    settings.setValue("font", currentFont.toString());
     settings.endGroup();
 }
 
@@ -541,4 +559,21 @@ void MainWindow::pasteDateTime()
 {
     textEdit->textCursor()
             .insertText(QDateTime::currentDateTime().toString());
+}
+
+void MainWindow::selectFont()
+{
+    bool isOk;
+    QFont font = QFontDialog::getFont(&isOk, this);
+    if (isOk) {
+        textEdit->setFont(font);
+        currentFont = font;
+    }
+}
+
+void MainWindow::setDefaults()
+{
+    QFont dFont = QApplication::font();
+    textEdit->setFont(dFont);
+    currentFont = dFont;
 }
