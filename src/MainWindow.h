@@ -52,6 +52,8 @@ private slots:
     void createFindDialog();
     void findText(QString, QTextDocument::FindFlags);
     void pasteDateTime();
+    void selectFont();
+    void setDefaults();
 
     void updateStatusBar();
 
@@ -95,6 +97,8 @@ protected:
     QAction *aboutAction;
     QAction *exitAction;
     QAction *pasteDateTimeAction;
+    QAction *fontDialogAction;
+    QAction *defaultsAction;
 
     QToolBar *baseToolBar;
     QToolBar *editToolBar;
@@ -102,6 +106,7 @@ protected:
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *pasteMenu;
+    QMenu *settingsMenu;
     QMenu *aboutMenu;
 
     QPointer<FindDialog> findDialog;
@@ -112,7 +117,7 @@ protected:
 
     QString m_savedFileName;
     bool m_isFileNameKnown;
-
+    QFont currentFont;
 };
 
 #endif // MAINWINDOW_H
