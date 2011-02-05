@@ -19,14 +19,23 @@
  **************************************************************************/
 
 #include "QuickDialog.h"
-#include <QSysInfo>
+#include <QFileInfo>
+#include <QFileSystemModel>
+#include <QListView>
+#include <QLineEdit>
+#include <QToolButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QListView>
+#include <QModelIndex>
 
-QuickDialog::QuickDialog(QWidget *parent, const QString &currentPath)
+QuickDialog::QuickDialog(QWidget *parent, bool openWindow, const QString &currentPath)
         : QWidget(parent), m_path(currentPath)
 {
     setupWidgets();
     setupLayouts();
     setupConnections();
+    setOpenNewWindow(openWindow);
 }
 
 void QuickDialog::setupWidgets()
@@ -34,20 +43,19 @@ void QuickDialog::setupWidgets()
     pathEdit = new QLineEdit(this);
     m_fsModel = new QFileSystemModel(this);
     if (m_path.isEmpty())
-        m_path = QDir::rootPath();
-
-    okButton = new QToolButton(this);
-    okButton->setIcon(QIcon::fromTheme("go-next"));
+        m_path = QDir::homePath();
 
     upButton = new QToolButton(this);
     upButton->setIcon(QIcon::fromTheme("go-up"));
 
     dirView = new QListView(this);
 
-    dirView->setRootIndex(m_fsModel->index(m_path));
+    m_openWindow = new QCheckBox(tr("&Open in new window"), this);
+
     dirView->setModel(m_fsModel);
+    QModelIndex index = m_fsModel->setRootPath(m_path);
+    dirView->setRootIndex(index);
     pathEdit->setText(m_path);
-    m_fsModel->setReadOnly(true);
 }
 
 void QuickDialog::setupLayouts()
@@ -57,17 +65,20 @@ void QuickDialog::setupLayouts()
 
     topLayout->addWidget(upButton);
     topLayout->addWidget(pathEdit);
-    topLayout->addWidget(okButton);
 
     mainLayout->addLayout(topLayout);
     mainLayout->addWidget(dirView);
+    mainLayout->addWidget(m_openWindow);
     setLayout(mainLayout);
 }
 
 void QuickDialog::goUpperDirectory()
 {
-    dirView->setRootIndex(dirView->rootIndex());
-    refreshPath(m_fsModel->rootPath());
+    QDir dir = m_path;
+    if (!dir.cdUp())
+        return;
+
+    refreshPath(dir.path());
 }
 
 void QuickDialog::goToDirectory()
@@ -80,18 +91,28 @@ void QuickDialog::setupConnections()
    connect(upButton, SIGNAL(clicked())
            , this, SLOT(goUpperDirectory()));
 
-   connect(okButton, SIGNAL(clicked())
-           , this, SLOT(goToDirectory()));
-
    connect(dirView, SIGNAL(clicked(QModelIndex))
-           , dirView, SLOT(setRootIndex(QModelIndex)));
+           , this, SLOT(openItem(QModelIndex)));
 
    connect(pathEdit, SIGNAL(textChanged(QString))
            , this, SLOT(refreshPath(QString)));
+
 }
 
-void QuickDialog::refreshPath(const QString &path)
+void QuickDialog::refreshPath(QString path)
 {
-    if (!path.isEmpty())
-        m_fsModel->setRootPath(path);
+    if (!path.isEmpty()) {
+        dirView->setRootIndex(m_fsModel->setRootPath(path));
+        m_path = path;
+        pathEdit->setText(path);
+    }
+}
+
+void QuickDialog::openItem(QModelIndex index)
+{
+    QString itemName = m_fsModel->filePath(index);
+    if (QFileInfo(itemName).isDir())
+       refreshPath(itemName);
+    else
+       emit fileSelected(itemName, m_openWindow->isChecked());
 }

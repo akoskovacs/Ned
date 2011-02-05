@@ -55,7 +55,8 @@ private slots:
     void pasteDateTime();
     void selectFont();
     void setDefaults();
-    void showQuickDialog(bool);
+    void showQuickDialog();
+    void onFileSelected(QString, bool);
 
     void updateStatusBar();
 

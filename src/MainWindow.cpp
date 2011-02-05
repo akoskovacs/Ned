@@ -177,10 +177,9 @@ void MainWindow::createActions()
     defaultsAction->setStatusTip(tr("Set everything to it's default setting, like font"));
     connect(defaultsAction, SIGNAL(triggered()), this, SLOT(setDefaults()));
 
-    quickDialogAction = new QAction(tr("Show QuickFile..."), this);
-    quickDialogAction->setCheckable(true);
-    connect(quickDialogAction, SIGNAL(triggered(bool))
-            , this, SLOT(showQuickDialog(bool)));
+    quickDialogAction = new QAction(tr("Show Quick File Browser..."), this);
+    connect(quickDialogAction, SIGNAL(triggered())
+            , this, SLOT(showQuickDialog()));
 }
 
 /* createContextMenus: Create some editing menus for the central
@@ -587,17 +586,22 @@ void MainWindow::setDefaults()
     currentFont = dFont;
 }
 
-void MainWindow::showQuickDialog(bool show)
+void MainWindow::showQuickDialog()
 {
-    if (!show) {
-        quickDialog->hide();
-        quickDialogDock->hide();
-    }
-
     quickDialogDock = new QDockWidget(tr("Quick File Chooser"), this);
+    quickDialogDock->setAttribute(Qt::WA_DeleteOnClose);
     quickDialogDock->setAllowedAreas(Qt::LeftDockWidgetArea
                                     | Qt::RightDockWidgetArea);
+
     quickDialog = new QuickDialog(this);
     quickDialogDock->setWidget(quickDialog);
     addDockWidget(Qt::LeftDockWidgetArea, quickDialogDock);
+    connect(quickDialog, SIGNAL(fileSelected(QString, bool))
+                                ,this, SLOT(onFileSelected(QString,bool)));
+}
+
+void MainWindow::onFileSelected(QString path, bool inNewWindow)
+{
+    loadFile(path);
+    inNewWindow = false;
 }

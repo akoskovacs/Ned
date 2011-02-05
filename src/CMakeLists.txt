@@ -3,11 +3,13 @@ INCLUDE(${QT_USE_FILE})
 SET(SOURCES
     main.cpp
     MainWindow.cpp
-    FindDialog.cpp)
+    FindDialog.cpp
+    QuickDialog.cpp)
 
 SET(HEADERS
     MainWindow.h
-    FindDialog.h)
+    FindDialog.h
+    QuickDialog.h)
 
 SET(RESOURCE
     ../Ned.qrc)

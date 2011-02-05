@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  *   Ned - Simple, graphical, cross-platform editor
- *   Copyright (C) 2011 ¡kos Kov·cs <akoskovacs@gmx.com>
+ *   Copyright (C) 2011 √Åkos Kov√°cs <akoskovacs@gmx.com>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -22,32 +22,36 @@
 #define QUICKDIALOG_H
 
 #include <QWidget>
-#include <QFileSystemModel>
-#include <QListView>
-#include <QLineEdit>
-#include <QToolButton>
+#include <QModelIndex>
 #include <QCheckBox>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QString>
+
+class QFileSystemModel;
+class QLineEdit;
+class QToolButton;
+class QVBoxLayout;
+class QHBoxLayout;
+class QListView;
 
 class QuickDialog : public QWidget
 {
     Q_OBJECT
 
     public:
-        QuickDialog(QWidget *parent = 0
+        QuickDialog(QWidget *parent = 0, bool openWindow = false
                 , const QString &currentPath = "");
+        bool isOpenNewWindow() { return m_openWindow->isChecked(); }
+        void setOpenNewWindow(bool isChecked)
+        { m_openWindow->setChecked(isChecked); }
 
     signals:
-        void fileSelected(QString &fileName);
-
-    public slots:
+        void fileSelected(QString, bool);
 
     private slots:
         void goUpperDirectory();
         void goToDirectory();
-        void refreshPath(const QString &);
+        void refreshPath(QString);
+        void openItem(QModelIndex);
 
     private:
         void setupWidgets();
@@ -56,13 +60,12 @@ class QuickDialog : public QWidget
 
         QLineEdit *pathEdit;
         QToolButton *upButton;
-        QToolButton *okButton;
         QListView *dirView;
-        QFileSystemModel dirModel;
         QVBoxLayout *mainLayout;
         QHBoxLayout *topLayout;
         QFileSystemModel *m_fsModel;
         QString m_path;
+        QCheckBox *m_openWindow;
 };
 
 #endif // QUICKDIALOG_H
