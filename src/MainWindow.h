@@ -40,8 +40,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
-    void setArgument(char *);
+    MainWindow(QStringList files = QStringList(), QWidget *parent = 0);
 
 private slots:
     void newFile();
@@ -71,6 +70,7 @@ protected:
     void createContextMenus();
     void createToolBars();
     void createStatusBar();
+    void createWindows(QStringList &files);
 
     void readSettings();
     void writeSettings();
@@ -121,10 +121,14 @@ protected:
     QLabel *characters;
     QLabel *lines;
     QLabel *mode;
+    QLabel *fontLabel;
 
+    QFont currentFont;
+
+    // Arrghm, the ugliest ones. Please,
+    // close your eyes!
     QString m_savedFileName;
     bool m_isFileNameKnown;
-    QFont currentFont;
 };
 
 #endif // MAINWINDOW_H

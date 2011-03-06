@@ -22,9 +22,10 @@
 #include <QDateTime>
 #include <QFontDialog>
 #include <QDockWidget>
+#include <QFontInfo>
 //#include "FindDialog.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QStringList files, QWidget *parent)
     : QMainWindow(parent)
 {
     textEdit = new QPlainTextEdit;
@@ -46,15 +47,37 @@ MainWindow::MainWindow(QWidget *parent)
     createActions();
     createMenus();
     createToolBars();
-    createStatusBar();
     createContextMenus();
 
     readSettings();
+
+    createStatusBar();
     setWindowIcon(QIcon(":/images/text-editor.png"));
+
+    if (files.count() == 1) {
+        m_savedFileName = files.first();
+        m_isFileNameKnown = true;
+        loadFile(files.first());
+    } else {
+        createWindows(files);
+    }
+}
+
+void MainWindow::createWindows(QStringList &files)
+{
+    MainWindow *w;
+    QStringList tmp;
+    QStringListIterator it(files);
+    while (it.hasNext()) {
+       tmp << it.next();
+       w = new MainWindow(tmp);
+       w->show();
+       tmp.clear();
+    }
 }
 
 /*
- * createActions: Creating the main actions associated with some properties
+ * createActions: Creates the main actions associated with some properties
  * for menus, toolbars and context menus.
  */
 void MainWindow::createActions()
@@ -183,7 +206,7 @@ void MainWindow::createActions()
 }
 
 /* createContextMenus: Create some editing menus for the central
- * widget.In this case this is a QPlainTextEdit.
+ * widget. In this case this is a QPlainTextEdit.
  * It will be appeare when the user clicks to it with the left
  * mouse button.
 */
@@ -264,10 +287,12 @@ void MainWindow::createStatusBar()
     characters = new QLabel("Lines");
     lines = new QLabel("bla");
     mode = new QLabel;
+    fontLabel = new QLabel();
 
     statusBar()->addWidget(characters);
     statusBar()->addWidget(lines);
     statusBar()->addWidget(mode);
+    statusBar()->addWidget(fontLabel);
 
     characters->setAlignment(Qt::AlignLeft);
     lines->setAlignment(Qt::AlignHCenter);
@@ -276,6 +301,7 @@ void MainWindow::createStatusBar()
     characters->show();
     lines->show();
     mode->show();
+    fontLabel->show();
 
     updateStatusBar();
 }
@@ -288,6 +314,8 @@ void MainWindow::createStatusBar()
 void MainWindow::updateStatusBar()
 {
     QTextDocument *textDocument = textEdit->document();
+    QFontInfo fontInfo(currentFont);
+
     characters->setText(tr("Total characters: %1")
                         .arg(textDocument->characterCount()-1));
     lines->setText(tr("Total lines: %1")
@@ -299,6 +327,9 @@ void MainWindow::updateStatusBar()
     } else  {
                  mode->setText(tr("Access: RW"));
     }
+    fontLabel->setText(tr("Font: %1 %2")
+                       .arg(fontInfo.family())
+                       .arg(fontInfo.pointSize()));
 }
 
 /*
@@ -307,12 +338,18 @@ void MainWindow::updateStatusBar()
  */
 void MainWindow::readSettings()
 {
+    int pointSize;
+    QString family;
+
     QSettings settings("Akos Kovacs", "Ned");
     settings.beginGroup("Window");
     restoreGeometry(settings.value("geometry").toByteArray());
     settings.endGroup();
-    settings.beginGroup("Other");
-    currentFont = settings.value("font").toString();
+    settings.beginGroup("Font");
+    family = settings.value("family").toString();
+    pointSize = settings.value("size").toInt();
+    currentFont.setFamily(family);
+    currentFont.setPointSize(pointSize);
     textEdit->setFont(currentFont);
     settings.endGroup();
 }
@@ -323,12 +360,14 @@ void MainWindow::readSettings()
 */
 void MainWindow::writeSettings()
 {
+    QFontInfo fontInfo(currentFont);
     QSettings settings("Akos Kovacs", "Ned");
     settings.beginGroup("Window");
     settings.setValue("geometry", saveGeometry());
     settings.endGroup();
-    settings.beginGroup("Other");
-    settings.setValue("font", currentFont.toString());
+    settings.beginGroup("Font");
+    settings.setValue("family", fontInfo.family());
+    settings.setValue("size", fontInfo.pointSize());
     settings.endGroup();
 }
 
@@ -394,18 +433,18 @@ void MainWindow::setCurrentFile(const QString &fileName)
    updateStatusBar();
 }
 
-/* maybeSave: Actived, every time when the user wants to quit
+/*
+ * maybeSave: Actived, every time when the user wants to quit
  * somehow, and popup a question if the document has unwritten changes.
 */
-// TODO: Need language-independent buttons!
 bool MainWindow::maybeSave()
 {
     if (isWindowModified()) {
         int r = QMessageBox::warning(this, tr("Ned")
-                                     ,tr("The document has been modified.\n"
-                                          "Do you want to save the changes?")
-                                     ,QMessageBox::Yes | QMessageBox::No
-                                     | QMessageBox::Cancel);
+                                 ,tr("The document has been modified.\n"
+                                      "Do you want to save the changes?")
+                                 ,QMessageBox::Yes | QMessageBox::No
+                                 | QMessageBox::Cancel);
         if (r == QMessageBox::Yes) {
             return saveFile();
         } else if (r == QMessageBox::Cancel) {
@@ -447,8 +486,8 @@ bool MainWindow::saveFile()
 
     if (!m_isFileNameKnown) {
         fileName = QFileDialog::getSaveFileName(this
-                                                ,tr("Save text files"), "."
-                                                ,tr("Every file (*)\nText files (*.txt)"));
+                                            ,tr("Save text files"), "."
+                                            ,tr("Every file (*)\nText files (*.txt)"));
         m_savedFileName = fileName;
     }
     if (!m_savedFileName.isEmpty()) {
@@ -469,8 +508,8 @@ bool MainWindow::saveFile()
 void MainWindow::saveAs()
 {
     QString fileName = QFileDialog::getSaveFileName(this
-                                    ,tr("Save as text file"), "."
-                                    ,tr("Every file (*.*)\nText files (*.txt)"));
+                                ,tr("Save as text file"), "."
+                                ,tr("Every file (*.*)\nText files (*.txt)"));
 
     if (!fileName.isEmpty())
         writeFile(fileName);
@@ -544,20 +583,6 @@ void MainWindow::textEditModified()
     setWindowModified(true);
 }
 
-/*
- * setArgument: At the startup, this will open a file
- * with the filename from argv[1].
-*/
-void MainWindow::setArgument(char *file)
-{
-    QString fileName(file);
-    if (!fileName.isEmpty()) {
-        m_isFileNameKnown = true;
-        m_savedFileName = fileName;
-        loadFile(fileName);
-    }
-}
-
 void MainWindow::findText(QString str, QTextDocument::FindFlags ff)
 {
     textEdit->find(str, ff);
@@ -572,11 +597,12 @@ void MainWindow::pasteDateTime()
 void MainWindow::selectFont()
 {
     bool isOk;
-    QFont font = QFontDialog::getFont(&isOk, this);
+    QFont font = QFontDialog::getFont(&isOk, currentFont, this);
     if (isOk) {
         textEdit->setFont(font);
         currentFont = font;
     }
+    updateStatusBar();
 }
 
 void MainWindow::setDefaults()
@@ -584,6 +610,7 @@ void MainWindow::setDefaults()
     QFont dFont = QApplication::font();
     textEdit->setFont(dFont);
     currentFont = dFont;
+    updateStatusBar();
 }
 
 void MainWindow::showQuickDialog()
@@ -602,6 +629,16 @@ void MainWindow::showQuickDialog()
 
 void MainWindow::onFileSelected(QString path, bool inNewWindow)
 {
-    loadFile(path);
-    inNewWindow = false;
+    if (inNewWindow) {
+        QStringList file;
+        file << path;
+        MainWindow *w = new MainWindow(file);
+        w->show();
+    }
+
+    if (maybeSave()) {
+        m_isFileNameKnown = true;
+        m_savedFileName = path;
+        loadFile(path);
+    }
 }

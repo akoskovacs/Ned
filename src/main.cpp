@@ -19,18 +19,24 @@
  **************************************************************************/    
 
 #include <QtGui/QApplication>
+#include <QStringList>
 #include "MainWindow.h"
 #include <QTranslator>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    // Removes the first argument
+    QStringList arguments = app.arguments();
+    arguments.removeFirst();
+
     QTranslator appTranslator;
     appTranslator.load("ned_" + QLocale::system().name(), ":/translations");
     app.installTranslator(&appTranslator);
 
-    MainWindow *window = new MainWindow();
-    window->setArgument(argv[1]);
+    // Create the window(s)
+    MainWindow *window = new MainWindow(arguments);
     window->show();
     return app.exec();
 }
