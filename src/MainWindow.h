@@ -21,7 +21,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#define APP_VERSION "0.3-alpha2"
+#define APP_VERSION "0.3-alpha3"
 
 #include <QtGui>
 #include "FindDialog.h"
@@ -85,7 +85,7 @@ protected:
     bool writeFile(QString &fileName);
 
     QPlainTextEdit *textEdit;
-    QDockWidget *quickDialogDock;
+    QPointer<QDockWidget> quickDialogDock;
     QAction *newAction;
     QAction *saveAction;
     QAction *saveAsAction;

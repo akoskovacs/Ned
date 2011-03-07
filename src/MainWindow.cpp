@@ -23,7 +23,6 @@
 #include <QFontDialog>
 #include <QDockWidget>
 #include <QFontInfo>
-//#include "FindDialog.h"
 
 MainWindow::MainWindow(QStringList files, QWidget *parent)
     : QMainWindow(parent)
@@ -175,7 +174,7 @@ void MainWindow::createActions()
 
     aboutAction = new QAction(tr("About this"), this);
     aboutAction->setIcon(QIcon::fromTheme("help-about"));
-    aboutAction->setStatusTip(tr("About this application"));
+    aboutAction->setStatusTip(tr("About this application ..."));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 
     exitAction = new QAction(tr("Exit"), this);
@@ -185,7 +184,7 @@ void MainWindow::createActions()
     exitAction->setStatusTip(tr("Exit from the application"));
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 
-    pasteDateTimeAction = new QAction(tr("Pate Date and Time"), this);
+    pasteDateTimeAction = new QAction(tr("Paste date and time"), this);
     pasteDateTimeAction->setIcon(QIcon::fromTheme("edit-paste"
                    ,QIcon(":/images/edit-paste.png")));
     pasteDateTimeAction->setShortcut(tr("Ctrl+D"));
@@ -200,7 +199,8 @@ void MainWindow::createActions()
     defaultsAction->setStatusTip(tr("Set everything to it's default setting, like font"));
     connect(defaultsAction, SIGNAL(triggered()), this, SLOT(setDefaults()));
 
-    quickDialogAction = new QAction(tr("Show Quick File Browser..."), this);
+    quickDialogAction = new QAction(tr("Show Quick File Browser ..."), this);
+    quickDialogAction->setShortcut(tr("Ctrl+B"));
     connect(quickDialogAction, SIGNAL(triggered())
             , this, SLOT(showQuickDialog()));
 }
@@ -338,19 +338,26 @@ void MainWindow::updateStatusBar()
  */
 void MainWindow::readSettings()
 {
-    int pointSize;
+    int pointSize = 12;
     QString family;
 
     QSettings settings("Akos Kovacs", "Ned");
     settings.beginGroup("Window");
     restoreGeometry(settings.value("geometry").toByteArray());
     settings.endGroup();
+
     settings.beginGroup("Font");
     family = settings.value("family").toString();
     pointSize = settings.value("size").toInt();
     currentFont.setFamily(family);
     currentFont.setPointSize(pointSize);
     textEdit->setFont(currentFont);
+    settings.endGroup();
+
+    settings.beginGroup("Windows");
+    if (settings.value("quick_dialog_autostart").toBool())
+        showQuickDialog();
+
     settings.endGroup();
 }
 
@@ -365,9 +372,18 @@ void MainWindow::writeSettings()
     settings.beginGroup("Window");
     settings.setValue("geometry", saveGeometry());
     settings.endGroup();
+
     settings.beginGroup("Font");
     settings.setValue("family", fontInfo.family());
     settings.setValue("size", fontInfo.pointSize());
+    settings.endGroup();
+
+    settings.beginGroup("Windows");
+    bool isDialogShown = true;
+    if (quickDialogDock == reinterpret_cast<QDockWidget *>(0))
+        isDialogShown = false;
+
+    settings.setValue("quick_dialog_autostart", isDialogShown);
     settings.endGroup();
 }
 
@@ -615,6 +631,9 @@ void MainWindow::setDefaults()
 
 void MainWindow::showQuickDialog()
 {
+    if (quickDialogDock != reinterpret_cast<QDockWidget *>(0))
+            return;
+
     quickDialogDock = new QDockWidget(tr("Quick File Chooser"), this);
     quickDialogDock->setAttribute(Qt::WA_DeleteOnClose);
     quickDialogDock->setAllowedAreas(Qt::LeftDockWidgetArea
@@ -634,6 +653,7 @@ void MainWindow::onFileSelected(QString path, bool inNewWindow)
         file << path;
         MainWindow *w = new MainWindow(file);
         w->show();
+        return;
     }
 
     if (maybeSave()) {
