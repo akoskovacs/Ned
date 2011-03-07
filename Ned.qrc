@@ -14,5 +14,6 @@
         <file>images/window-close.png</file>
         <file>translations/ned_hu.qm</file>
         <file>images/text-editor.png</file>
+        <file>images/folder-documents.png</file>
     </qresource>
 </RCC>

@@ -200,6 +200,8 @@ void MainWindow::createActions()
     connect(defaultsAction, SIGNAL(triggered()), this, SLOT(setDefaults()));
 
     quickDialogAction = new QAction(tr("Show Quick File Browser ..."), this);
+    quickDialogAction->setIcon(QIcon::fromTheme(("folder")
+                    , QIcon(":/images/folder-documents.png")));
     quickDialogAction->setShortcut(tr("Ctrl+B"));
     connect(quickDialogAction, SIGNAL(triggered())
             , this, SLOT(showQuickDialog()));
@@ -237,6 +239,10 @@ void MainWindow::createToolBars()
     editToolBar->addAction(cutAction);
     editToolBar->addAction(cutAction);
     editToolBar->addAction(pasteAction);
+    editToolBar->addSeparator();
+
+    utilToolBar = addToolBar(tr("&Utils"));
+    utilToolBar->addAction(quickDialogAction);
 }
 
 /*
@@ -631,8 +637,10 @@ void MainWindow::setDefaults()
 
 void MainWindow::showQuickDialog()
 {
-    if (quickDialogDock != reinterpret_cast<QDockWidget *>(0))
+    if (quickDialogDock != reinterpret_cast<QDockWidget *>(0)) {
+            statusBar()->showMessage(tr("The dialog is already open!"), 2000);
             return;
+    }
 
     quickDialogDock = new QDockWidget(tr("Quick File Chooser"), this);
     quickDialogDock->setAttribute(Qt::WA_DeleteOnClose);

@@ -107,6 +107,7 @@ protected:
 
     QToolBar *baseToolBar;
     QToolBar *editToolBar;
+    QToolBar *utilToolBar;
 
     QMenu *fileMenu;
     QMenu *viewMenu;
