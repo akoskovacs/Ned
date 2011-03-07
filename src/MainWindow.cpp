@@ -205,6 +205,10 @@ void MainWindow::createActions()
     quickDialogAction->setShortcut(tr("Ctrl+B"));
     connect(quickDialogAction, SIGNAL(triggered())
             , this, SLOT(showQuickDialog()));
+
+    aboutQtAction = new QAction(tr("About Qt ..."), this);
+    connect(aboutQtAction, SIGNAL(triggered())
+            , this, SLOT(aboutQt()));
 }
 
 /* createContextMenus: Create some editing menus for the central
@@ -281,8 +285,11 @@ void MainWindow::createMenus()
     settingsMenu->addAction(fontDialogAction);
     settingsMenu->addAction(defaultsAction);
 
+    menuBar()->addSeparator();
     aboutMenu = menuBar()->addMenu(tr("&Help"));
     aboutMenu->addAction(aboutAction);
+    aboutMenu->addSeparator();
+    aboutMenu->addAction(aboutQtAction);
 }
 
 /*

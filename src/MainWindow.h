@@ -56,6 +56,7 @@ private slots:
     void setDefaults();
     void showQuickDialog();
     void onFileSelected(QString, bool);
+    inline void aboutQt() { qApp->aboutQt(); }
 
     void updateStatusBar();
 
@@ -104,6 +105,7 @@ protected:
     QAction *fontDialogAction;
     QAction *defaultsAction;
     QAction *quickDialogAction;
+    QAction *aboutQtAction;
 
     QToolBar *baseToolBar;
     QToolBar *editToolBar;
