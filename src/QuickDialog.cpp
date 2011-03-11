@@ -46,7 +46,7 @@ void QuickDialog::setupWidgets()
         m_path = QDir::homePath();
 
     upButton = new QToolButton(this);
-    upButton->setIcon(QIcon::fromTheme("go-up"));
+    upButton->setIcon(QIcon::fromTheme("go-up", QIcon(":/images/go-up.png")));
 
     dirView = new QListView(this);
 
