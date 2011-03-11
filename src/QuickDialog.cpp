@@ -20,6 +20,7 @@
 
 #include "QuickDialog.h"
 
+#include <QCompleter>
 #include <QFileInfo>
 #include <QFileSystemModel>
 #include <QHBoxLayout>
@@ -46,6 +47,8 @@ void QuickDialog::setupWidgets()
     if (m_path.isEmpty())
         m_path = QDir::homePath();
 
+    m_completer = new QCompleter;
+
     upButton = new QToolButton(this);
     upButton->setIcon(QIcon::fromTheme("go-up", QIcon(":/images/go-up.png")));
 
@@ -56,7 +59,9 @@ void QuickDialog::setupWidgets()
     dirView->setModel(m_fsModel);
     QModelIndex index = m_fsModel->setRootPath(m_path);
     dirView->setRootIndex(index);
+    m_completer->setModel(m_fsModel);
     pathEdit->setText(m_path);
+    pathEdit->setCompleter(m_completer);
 }
 
 void QuickDialog::setupLayouts()

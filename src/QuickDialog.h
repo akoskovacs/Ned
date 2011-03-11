@@ -33,6 +33,7 @@ class QLineEdit;
 class QListView;
 class QToolButton;
 class QVBoxLayout;
+class QCompleter;
 
 class QuickDialog : public QWidget
 {
@@ -67,6 +68,7 @@ class QuickDialog : public QWidget
         QFileSystemModel *m_fsModel;
         QString m_path;
         QCheckBox *m_openWindow;
+        QCompleter *m_completer;
 };
 
 #endif // QUICKDIALOG_H
