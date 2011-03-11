@@ -18,9 +18,10 @@
  *
  **************************************************************************/    
 
+#include "MainWindow.h"
+
 #include <QtGui/QApplication>
 #include <QStringList>
-#include "MainWindow.h"
 #include <QTranslator>
 
 int main(int argc, char *argv[])

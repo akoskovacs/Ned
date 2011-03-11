@@ -21,17 +21,18 @@
 #ifndef QUICKDIALOG_H
 #define QUICKDIALOG_H
 
-#include <QWidget>
-#include <QModelIndex>
 #include <QCheckBox>
+#include <QModelIndex>
 #include <QString>
+#include <QUrl>
+#include <QWidget>
 
 class QFileSystemModel;
+class QHBoxLayout;
 class QLineEdit;
+class QListView;
 class QToolButton;
 class QVBoxLayout;
-class QHBoxLayout;
-class QListView;
 
 class QuickDialog : public QWidget
 {

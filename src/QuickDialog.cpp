@@ -19,15 +19,16 @@
  **************************************************************************/
 
 #include "QuickDialog.h"
+
 #include <QFileInfo>
 #include <QFileSystemModel>
-#include <QListView>
-#include <QLineEdit>
-#include <QToolButton>
-#include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QLineEdit>
+#include <QListView>
 #include <QListView>
 #include <QModelIndex>
+#include <QToolButton>
+#include <QVBoxLayout>
 
 QuickDialog::QuickDialog(QWidget *parent, bool openWindow, const QString &currentPath)
         : QWidget(parent), m_path(currentPath)

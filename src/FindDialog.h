@@ -23,13 +23,14 @@
 
 #include <QDialog>
 #include <QTextDocument>
+#include <QUrl>
 
+class QCheckBox;
+class QHBoxLayout;
+class QLabel;
+class QLineEdit;
 class QPushButton;
 class QVBoxLayout;
-class QHBoxLayout;
-class QLineEdit;
-class QCheckBox;
-class QLabel;
 
 class FindDialog : public QDialog
 {

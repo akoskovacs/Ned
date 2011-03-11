@@ -20,13 +20,13 @@
 
 #include "FindDialog.h"
 
-#include <QPushButton>
-#include <QLineEdit>
-#include <QString>
-#include <QVBoxLayout>
+#include <QCheckBox>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QCheckBox>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QString>
+#include <QVBoxLayout>
 
 FindDialog::FindDialog(QWidget *parent)
     : QDialog(parent)

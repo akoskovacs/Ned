@@ -19,10 +19,30 @@
  **************************************************************************/    
 
 #include "MainWindow.h"
+
+#include <QAction>
+#include <QCloseEvent>
 #include <QDateTime>
-#include <QFontDialog>
 #include <QDockWidget>
+#include <QDrag>
+#include <QDropEvent>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QFontDialog>
+#include <QFontDialog>
 #include <QFontInfo>
+#include <QLabel>
+#include <QLabel>
+#include <QLocale>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QPlainTextEdit>
+#include <QSettings>
+#include <QStatusBar>
+#include <QTextStream>
+#include <QToolBar>
+#include <QUrl>
 
 MainWindow::MainWindow(QStringList files, QWidget *parent)
     : QMainWindow(parent)

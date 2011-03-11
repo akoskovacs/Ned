@@ -23,16 +23,25 @@
 
 #define APP_VERSION "0.3-alpha3"
 
-#include <QtGui>
 #include "FindDialog.h"
 #include "QuickDialog.h"
 
+#include <QApplication>
+#include <QFont>
+#include <QLocale>
+#include <QMainWindow>
+#include <QPointer>
+#include <QString>
+
 class QAction;
-class QMenu;
 class QPlainTextEdit;
 class QToolBar;
 class QMainWindow;
 class QLabel;
+class QCloseEvent;
+class QDropEvent;
+class QDrag;
+
 // class FindDialog;
 
 class MainWindow : public QMainWindow
