@@ -674,7 +674,8 @@ void MainWindow::showQuickDialog()
     quickDialogDock->setAllowedAreas(Qt::LeftDockWidgetArea
                                     | Qt::RightDockWidgetArea);
 
-    quickDialog = new QuickDialog(this);
+    quickDialog = new QuickDialog(this
+                  , (m_isFileNameKnown) ? QFileInfo(m_savedFileName).path() : "");
     quickDialogDock->setWidget(quickDialog);
     addDockWidget(Qt::LeftDockWidgetArea, quickDialogDock);
     connect(quickDialog, SIGNAL(fileSelected(QString, bool))

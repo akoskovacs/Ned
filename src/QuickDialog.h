@@ -40,8 +40,7 @@ class QuickDialog : public QWidget
     Q_OBJECT
 
     public:
-        QuickDialog(QWidget *parent = 0, bool openWindow = false
-                , const QString &currentPath = "");
+        QuickDialog(QWidget *parent = 0, const QString &currentPath = "");
         bool isOpenNewWindow() { return m_openWindow->isChecked(); }
         void setOpenNewWindow(bool isChecked)
         { m_openWindow->setChecked(isChecked); }

@@ -31,13 +31,12 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
-QuickDialog::QuickDialog(QWidget *parent, bool openWindow, const QString &currentPath)
+QuickDialog::QuickDialog(QWidget *parent, const QString &currentPath)
         : QWidget(parent), m_path(currentPath)
 {
     setupWidgets();
     setupLayouts();
     setupConnections();
-    setOpenNewWindow(openWindow);
 }
 
 void QuickDialog::setupWidgets()
