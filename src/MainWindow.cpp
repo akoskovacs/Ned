@@ -592,7 +592,7 @@ void MainWindow::about()
                ,tr("<b><h3>Ned, version %1</h3></b>"
                    "Ned is a simple, cross-platform text editor "
                    "written in C++, using the Qt4 graphical "
-                   "framework.<br><br>"
+                   "framework.<br>"
                    "<i>Copyright (C) Akos Kovacs - 2010</i>")
                    .arg(APP_VERSION));
 }
