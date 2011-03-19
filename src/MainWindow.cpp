@@ -23,6 +23,7 @@
 #include <QAction>
 #include <QCloseEvent>
 #include <QDateTime>
+#include <QDir>
 #include <QDockWidget>
 #include <QDrag>
 #include <QDropEvent>
@@ -507,8 +508,8 @@ void MainWindow::open()
 {
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this
-                                        ,tr("Open text files"), "."
-                                        ,tr("Every file (*)\nText files (*.txt)"));
+                                        , tr("Open text files"), QDir::homePath()
+                                        , tr("Every file (*.*);;Text files (*.txt)"));
     if (!fileName.isEmpty())
         loadFile(fileName);
         m_savedFileName = fileName;
@@ -535,8 +536,8 @@ bool MainWindow::saveFile()
 
     if (!m_isFileNameKnown) {
         fileName = QFileDialog::getSaveFileName(this
-                                            ,tr("Save text files"), "."
-                                            ,tr("Every file (*)\nText files (*.txt)"));
+                                            , tr("Save text files"), QDir::homePath() 
+                                            , tr("Every file (*);;Text files (*.txt)"));
         m_savedFileName = fileName;
     }
     if (!m_savedFileName.isEmpty()) {
@@ -557,8 +558,8 @@ bool MainWindow::saveFile()
 void MainWindow::saveAs()
 {
     QString fileName = QFileDialog::getSaveFileName(this
-                                ,tr("Save as text file"), "."
-                                ,tr("Every file (*.*)\nText files (*.txt)"));
+                                , tr("Save as text file"), QDir::homePath() 
+                                , tr("Every file (*);;Text files (*.txt)"));
 
     if (!fileName.isEmpty())
         writeFile(fileName);
